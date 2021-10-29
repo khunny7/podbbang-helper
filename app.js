@@ -2,9 +2,10 @@ import createError from 'http-errors';
 import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
 import logger from 'morgan';
 
-import indexRouter from './routes/index.js';
+import apiRouter from './routes/api.js';
 import usersRouter from './routes/users.js';
 import podbbangRouter from './routes/podbbang.js';
 
@@ -20,9 +21,18 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, './webapp/build')));
+
+
+app.get('/', (req,res) => {
+  res.sendFile(path.join(__dirname, '../webapp/build/index.html'));
+});
+
+
+app.use('/api', apiRouter);
 app.use('/users', usersRouter);
 app.use('/podbbang', podbbangRouter);
 
