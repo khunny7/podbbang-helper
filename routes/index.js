@@ -7,13 +7,13 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/episodes/:episodeId', async (req, res, next) => {
+router.get('/api/episodes/:episodeId', async (req, res, next) => {
   const episodeId = req.params.episodeId;
   const data = await getEpisodes(episodeId);
   res.send(data);
 });
 
-router.get('/ranking', async (req, res, next) => {
+router.get('/api/ranking', async (req, res, next) => {
   const data = await getChannels();
   res.send(data);
 });
