@@ -16,31 +16,38 @@ const EpisodeListItem = (props) => {
     } = props;
 
     const {
-        audioLists,
-        setAudioLists,
+        playAudio,
+        addAudio,
     } = useContext(AudioListsContext);
 
     const onPlay = useCallback(() => {
-        const newList = [...audioLists];
-        newList.push({
+        playAudio({
             cover: image,
             musicSrc: mediaUrl,
             name: title,
             singer: 'TO DO',
         });
-        setAudioLists(newList);
-    }, [audioLists, setAudioLists, image, mediaUrl, title]);
+    }, [playAudio, image, mediaUrl, title]);
+
+    const onAddAudio = useCallback(() => {
+        addAudio({
+            cover: image,
+            musicSrc: mediaUrl,
+            name: title,
+            singer: 'TO DO',
+        });
+    }, [addAudio, image, mediaUrl, title]);
 
     const classNames = mergeStyleSets({
         itemCell: {
-            height: 160,
+            height: 100,
             width: '100%',
             margin: 5,
             border: 'solid',
             borderWidth: 'thin',
         },
         episodeImage: {
-            height: 160,
+            height: 100,
         },
     });
 
@@ -50,7 +57,7 @@ const EpisodeListItem = (props) => {
             disableShrink
             className={classNames.itemCell}>
             <Stack.Item align='auto'>
-                <img src={image} alt={title} height={160} className={classNames.episodeImage}/>
+                <img src={image} alt={title} className={classNames.episodeImage}/>
             </Stack.Item>
             <Stack.Item align='auto'>
                 <p>{title}</p>
@@ -58,6 +65,7 @@ const EpisodeListItem = (props) => {
                 <p>{id}</p>
                 <a href={mediaUrl} download target='_blank' rel='noreferrer'>Download</a>
                 <button onClick={onPlay}>Play</button>
+                <button onClick={onAddAudio}>Queue</button>
             </Stack.Item>
         </Stack>
     );

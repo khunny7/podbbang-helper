@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { DefaultButton } from '@fluentui/react/lib/Button';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
+import { Stack } from '@fluentui/react';
 
 const ChannelListItem = (props) => {
     const {
@@ -17,6 +18,11 @@ const ChannelListItem = (props) => {
             height: 160,
             width: '100%',
             margin: 5,
+            textAlign: 'left',
+            '& span': {
+                justifyContent: 'left',
+                alignItems: 'left',
+            },
         },
     });
 
@@ -24,12 +30,28 @@ const ChannelListItem = (props) => {
         <DefaultButton
             className={classNames.itemCell}
             onClick={() => onChannelSelected(id)}>
-            <img src={image} alt={title} />
-            <p>{title}</p>
-            <p>{description}</p>
-            <p>{id}</p>
+            <Stack
+                horizontal
+                disableShrink>
+                <Stack.Item align='start'>
+                    <img src={image} alt={title} />
+                </Stack.Item>
+                <Stack
+                    horizontal={false}
+                    disableShrink={false}>
+                    <Stack.Item align='auto'>
+                        {title}
+                    </Stack.Item>
+                    <Stack.Item align='auto'>
+                        {description}
+                    </Stack.Item>
+                    <Stack.Item align='auto'>
+                        {id}
+                    </Stack.Item>
+                </Stack>
+            </Stack>
         </DefaultButton>
-    );
+    )
 };
 
 ChannelListItem.propTypes = {
