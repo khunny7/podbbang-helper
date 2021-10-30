@@ -1,6 +1,8 @@
+import { useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Stack } from '@fluentui/react';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
+import AudioListsContext from '../audio-list-context';
 
 const EpisodeListItem = (props) => {
     const {
@@ -12,6 +14,22 @@ const EpisodeListItem = (props) => {
         mediaUrl,
         // updatedAt,
     } = props;
+
+    const {
+        audioLists,
+        setAudioLists,
+    } = useContext(AudioListsContext);
+
+    const onPlay = useCallback(() => {
+        const newList = [...audioLists];
+        newList.push({
+            cover: image,
+            musicSrc: mediaUrl,
+            name: title,
+            singer: 'TO DO',
+        });
+        setAudioLists(newList);
+    }, [audioLists, setAudioLists, image, mediaUrl, title]);
 
     const classNames = mergeStyleSets({
         itemCell: {
@@ -39,6 +57,7 @@ const EpisodeListItem = (props) => {
                 <p>{description}</p>
                 <p>{id}</p>
                 <a href={mediaUrl} download target='_blank' rel='noreferrer'>Download</a>
+                <button onClick={onPlay}>Play</button>
             </Stack.Item>
         </Stack>
     );
