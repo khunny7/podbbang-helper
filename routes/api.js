@@ -2,9 +2,9 @@ import express from 'express';
 import { getEpisodes, getChannels } from '../data/podbbang-repo.js';
 const router = express.Router();
 
-router.get('/episodes/:episodeId', async (req, res, next) => {
-  const episodeId = req.params.episodeId;
-  const data = await getEpisodes(episodeId);
+router.get('/channel/:channelId', async (req, res, next) => {
+  const channelId = req.params.channelId;
+  const data = await getEpisodes(channelId);
   res.send(data);
 });
 

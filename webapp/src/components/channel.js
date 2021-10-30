@@ -1,40 +1,47 @@
-import PropTypes from 'prop-types';
-import { DefaultButton } from '@fluentui/react/lib/Button';
-import { mergeStyleSets } from '@fluentui/react/lib/Styling';
+import { useState, useEffect, useCallback } from 'react';
+import { FocusZone } from '@fluentui/react/lib/FocusZone';
+import { List } from '@fluentui/react/lib/List';
+import { useParams  } from 'react-router-dom';
+import { EpisodeListItem } from './episode-list-item';
 
 const Channel = (props) => {
-    const {
-        title,
-        description,
-        id,
-        image,
-        // updatedAt,
-    } = props;
+    const { channelId } = useParams();
 
-    const classNames = mergeStyleSets({
-        itemCell: {
-            height: 160,
-            width: '100%',
-            margin: 5,
-        },
-    });
+    const [episodes, setEpisodes] = useState([]);
+    const [offset, setOffset] = useState();
+
+    useEffect(() => {
+        fetch(`/api/channel/${channelId}`).then((res) => {
+            return res.json();
+        }).then((data) => {
+            console.log(data);
+            setEpisodes(data.data);
+            setOffset(data.offset);
+        });
+    }, [channelId, setEpisodes, setOffset]);
+
+    const onRenderCell = useCallback((item) => {
+        return (
+            <EpisodeListItem
+                title={item.title}
+                description={item.description}
+                id={item.id}
+                channelId={item.channel.id}
+                image={item.image}
+                mediaUrl={item.media.url}
+                updatedAt={item.updatedAt} />
+        )
+    }, [])
 
     return (
-        <DefaultButton className={classNames.itemCell}>
-            <img src={image} alt={title} />
-            <p>{title}</p>
-            <p>{description}</p>
-            <p>{id}</p>
-        </DefaultButton>
+        <FocusZone>
+            <List
+                items={episodes}
+                onRenderCell={onRenderCell}
+            />
+            <p>{offset}</p>
+        </FocusZone>
     );
-};
-
-Channel.propTypes = {
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    id: PropTypes.number.isRequired,
-    image: PropTypes.string.isRequired,
-    updatedAt: PropTypes.string.isRequired,
 };
 
 export { Channel }

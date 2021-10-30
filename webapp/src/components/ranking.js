@@ -1,11 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import { FocusZone } from '@fluentui/react/lib/FocusZone';
 import { List } from '@fluentui/react/lib/List';
-import { Channel } from './channel';
+import { ChannelListItem } from './channel-list-item';
 
 const Ranking = (props) => {
+    const history = useHistory();
     const [channels, setChannels] = useState([]);
     const [next, setNext] = useState();
+
+    const onChannelSelected = useCallback((channelId) => {
+        console.log(`channel id selected ${channelId}`);
+        history.push(`/channel/${channelId}`);
+    }, [history]);
 
     useEffect(() => {
         fetch('/api/ranking').then((res) => {
@@ -19,14 +26,15 @@ const Ranking = (props) => {
 
     const onRenderCell = useCallback((item) => {
         return (
-            <Channel
+            <ChannelListItem
                 title={item.title}
                 description={item.description}
                 id={item.id}
                 image={item.image}
-                updatedAt={item.updatedAt} />
+                updatedAt={item.updatedAt}
+                onChannelSelected={onChannelSelected} />
         )
-    }, [])
+    }, [onChannelSelected])
 
     return (
         <FocusZone>
@@ -35,19 +43,6 @@ const Ranking = (props) => {
                 onRenderCell={onRenderCell}
             />
             <p>{next}</p>
-            {/* {
-                channels.map((channel) => {
-                    return (
-                        <Channel
-                            key={channel.id}
-                            title={channel.title}
-                            description={channel.description}
-                            id={channel.id}
-                            image={channel.image}
-                            updatedAt={channel.updatedAt} />
-                    )
-                })
-            } */}
         </FocusZone>
     );
 };
