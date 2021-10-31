@@ -8,7 +8,7 @@ const EpisodeListItem = (props) => {
     const {
         title,
         description,
-        id,
+        // id,
         // channelId,
         image,
         mediaUrl,
