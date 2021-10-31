@@ -15,15 +15,23 @@ const ChannelListItem = (props) => {
 
     const classNames = mergeStyleSets({
         itemCell: {
-            height: 160,
+            height: 104,
             width: '100%',
-            margin: 5,
+            padding: 0,
             textAlign: 'left',
             '& span': {
                 justifyContent: 'left',
                 alignItems: 'left',
             },
         },
+        channelImage: {
+            height: 100,
+        },
+        outerStack: {
+            margin: 1,
+            marginTop: 2,
+            height: 102,
+        }
     });
 
     return (
@@ -31,22 +39,20 @@ const ChannelListItem = (props) => {
             className={classNames.itemCell}
             onClick={() => onChannelSelected(id)}>
             <Stack
+                className={classNames.outerStack}
                 horizontal
-                disableShrink>
+                disableShrink={false}>
                 <Stack.Item align='start'>
-                    <img src={image} alt={title} />
+                    <img src={image} alt={title} className={classNames.channelImage} />
                 </Stack.Item>
                 <Stack
                     horizontal={false}
                     disableShrink={false}>
                     <Stack.Item align='auto'>
-                        {title}
+                        <p>{title}</p>
                     </Stack.Item>
                     <Stack.Item align='auto'>
-                        {description}
-                    </Stack.Item>
-                    <Stack.Item align='auto'>
-                        {id}
+                        <p>{description}</p>
                     </Stack.Item>
                 </Stack>
             </Stack>

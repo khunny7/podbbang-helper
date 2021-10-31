@@ -3,6 +3,7 @@ import express from 'express';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
+import logger from 'morgan';
 
 import apiRouter from './routes/api.js';
 
@@ -10,6 +11,11 @@ const __dirname = path.resolve();
 
 const app = express();
 
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -38,7 +44,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  // res.render('error');
+  res.render('error');
 });
 
 export default app;
