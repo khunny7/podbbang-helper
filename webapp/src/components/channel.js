@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { FocusZone } from '@fluentui/react/lib/FocusZone';
-import { List } from '@fluentui/react/lib/List';
+import Box from '@mui/material/Box';
 import Pagination from '@mui/material/Pagination';
+import Grid from '@mui/material/Grid';
 import { useParams  } from 'react-router-dom';
 import { EpisodeListItem } from './episode-list-item';
 
@@ -29,19 +29,6 @@ const Channel = (props) => {
         });
     }, [channelId, offset, setEpisodes, setOffset]);
 
-    const onRenderCell = useCallback((item) => {
-        return (
-            <EpisodeListItem
-                title={item.title}
-                description={item.description}
-                id={item.id}
-                channelId={item.channel.id}
-                image={item.image}
-                mediaUrl={item.media.url}
-                updatedAt={item.updatedAt} />
-        )
-    }, []);
-
     const onPageChange = useCallback((event, value) => {
         setCurPage(value);
         setOffset(value - 1);
@@ -52,17 +39,31 @@ const Channel = (props) => {
     }, [totalCount])
 
     return (
-        <FocusZone>
-            <List
-                items={episodes}
-                onRenderCell={onRenderCell}
-            />
+        <Box>
+            <Grid container>
+                {
+                    episodes.length > 0 &&
+                    episodes.map((episode) => {
+                        return (
+                            <EpisodeListItem
+                                key={episode.id}
+                                title={episode.title}
+                                description={episode.description}
+                                id={episode.id}
+                                channelId={episode.channel.id}
+                                image={episode.image}
+                                mediaUrl={episode.media.url}
+                                updatedAt={episode.updatedAt} />
+                        )
+                    })
+                }             
+            </Grid>
             {
                 totalPageCount > 0 && (
-                    <Pagination count={totalPageCount} page={curPage} onChange={onPageChange} />
+                    <Pagination count={totalPageCount} page={curPage} onChange={onPageChange} style={{margin:10}}/>
                 )
-            }            
-        </FocusZone>
+            }
+        </Box>
     );
 };
 

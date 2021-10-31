@@ -33,6 +33,7 @@ const Player = (props) => {
             showThemeSwitch={false}
             showReload={false}
             showDownload={false}
+            defaultPosition={{left: 0, top: 100}}
             onAudioListsChange={onAudioListsChange}
             showMediaSession
             quietUpdate
