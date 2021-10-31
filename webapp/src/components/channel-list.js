@@ -4,15 +4,10 @@ import { FocusZone } from '@fluentui/react/lib/FocusZone';
 import { List } from '@fluentui/react/lib/List';
 import { ChannelListItem } from './channel-list-item';
 
-const Ranking = (props) => {
+const ChannelList = (props) => {
     const history = useHistory();
     const [channels, setChannels] = useState([]);
     const [next, setNext] = useState();
-
-    const onChannelSelected = useCallback((channelId) => {
-        console.log(`channel id selected ${channelId}`);
-        history.push(`/channel/${channelId}`);
-    }, [history]);
 
     useEffect(() => {
         fetch('/api/ranking').then((res) => {
@@ -24,6 +19,10 @@ const Ranking = (props) => {
         });
     }, [setChannels, setNext]);
 
+    const onChannelSelected = useCallback((channelId) => {
+        history.push(`/channel/${channelId}`);
+    }, [history]);
+
     const onRenderCell = useCallback((item) => {
         return (
             <ChannelListItem
@@ -34,7 +33,7 @@ const Ranking = (props) => {
                 updatedAt={item.updatedAt}
                 onChannelSelected={onChannelSelected} />
         )
-    }, [onChannelSelected])
+    }, [onChannelSelected]);
 
     return (
         <FocusZone>
@@ -47,4 +46,4 @@ const Ranking = (props) => {
     );
 };
 
-export { Ranking }
+export default ChannelList;

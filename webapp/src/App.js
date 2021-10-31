@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 import Container from '@mui/material/Container';
-import { Ranking } from './components/ranking';
+import ChannelList from './components/channel-list';
 import { Channel } from './components/channel';
 import AudioListsContext from './audio-list-context';
 import HeaderAppBar from './components/app-bar';
@@ -21,7 +21,7 @@ function App() {
       <AudioListsContext.Provider value={{audioLists, clearPriorAudioLists, setAudioListsWithClear}}>
         <BrowserRouter>
           <HeaderAppBar />
-          <Route path='/' exact component={Ranking} />
+          <Route path='/' exact component={ChannelList} />
           <Route path='/channel/:channelId' exact component={Channel} />
         </BrowserRouter>
         {
