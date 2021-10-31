@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get('/channel/:channelId', async (req, res, next) => {
   const channelId = req.params.channelId;
-  const data = await getEpisodes(channelId);
+  const data = await getEpisodes(channelId, req.query.offset);
   res.send(data);
 });
 

@@ -23,6 +23,7 @@ const ChannelListItem = (props) => {
                 justifyContent: 'left',
                 alignItems: 'left',
             },
+            border: 0,
         },
         channelImage: {
             height: 100,
