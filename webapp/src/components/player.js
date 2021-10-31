@@ -2,6 +2,7 @@ import { useCallback, useContext } from 'react';
 import ReactJkMusicPlayer from 'react-jinke-music-player'
 import 'react-jinke-music-player/assets/index.css'
 import AudioListsContext from '../audio-list-context';
+import './player.css';
 
 const Player = (props) => {
     const {

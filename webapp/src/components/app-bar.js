@@ -13,7 +13,7 @@ const HeaderAppBar = () => {
     const { currentPage } = useContext(NavContext);
 
     return (
-        <AppBar position="fixed">
+        <AppBar position='fixed'>
             <Toolbar>
             <IconButton
                 size="large"

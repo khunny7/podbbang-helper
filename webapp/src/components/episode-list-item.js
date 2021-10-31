@@ -10,6 +10,7 @@ import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import QueueIcon from '@mui/icons-material/Queue';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import AudioListsContext from '../audio-list-context';
+import NavContext from '../nav-context';
 
 const EpisodeListItem = (props) => {
     const {
@@ -22,6 +23,8 @@ const EpisodeListItem = (props) => {
         // updatedAt,
     } = props;
 
+    const { currentPage } = useContext(NavContext);
+
     const {
         audioLists,
         setAudioListsWithClear,
@@ -32,9 +35,9 @@ const EpisodeListItem = (props) => {
             cover: image,
             musicSrc: mediaUrl,
             name: title,
-            singer: 'TO DO',
+            singer: currentPage,
         }], true);
-    }, [setAudioListsWithClear, image, mediaUrl, title]);
+    }, [setAudioListsWithClear, image, mediaUrl, title, currentPage]);
 
     const onAddAudio = useCallback(() => {
         const updatedAudioLists = [
@@ -43,12 +46,12 @@ const EpisodeListItem = (props) => {
                 cover: image,
                 musicSrc: mediaUrl,
                 name: title,
-                singer: 'TO DO',
+                singer: currentPage,
             },
         ];
 
         setAudioListsWithClear(updatedAudioLists, false);
-    }, [setAudioListsWithClear, audioLists, image, mediaUrl, title]);
+    }, [setAudioListsWithClear, audioLists, image, mediaUrl, title, currentPage]);
 
     return (
         <Card sx={{ width: 345 }} style={{margin:5}}>
