@@ -4,10 +4,12 @@ import Container from '@mui/material/Container';
 import ChannelList from './components/channel-list';
 import { Channel } from './components/channel';
 import AudioListsContext from './audio-list-context';
+import NavContext from './nav-context';
 import HeaderAppBar from './components/app-bar';
 import Player from './components/player';
 
 function App() {
+  const [currentPage, setCurrentPage] = useState('Home');
   const [audioLists, setAudioLists] = useState([]);
   const [clearPriorAudioLists, setClearPriorAudioLists] = useState(false);
 
@@ -18,18 +20,20 @@ function App() {
 
   return (
     <Container style={{paddingTop: 65}}>
-      <AudioListsContext.Provider value={{audioLists, clearPriorAudioLists, setAudioListsWithClear}}>
-        <BrowserRouter>
-          <HeaderAppBar />
-          <Route path='/' exact component={ChannelList} />
-          <Route path='/channel/:channelId' exact component={Channel} />
-        </BrowserRouter>
-        {
-          audioLists.length > 0 &&
-          <Player />
-        }
-        
-      </AudioListsContext.Provider>
+      <NavContext.Provider value={{currentPage, setCurrentPage}}>
+        <AudioListsContext.Provider value={{audioLists, clearPriorAudioLists, setAudioListsWithClear}}>
+          <BrowserRouter>
+            <HeaderAppBar />
+            <Route path='/' exact component={ChannelList} />
+            <Route path='/channel/:channelId' exact component={Channel} />
+          </BrowserRouter>
+          {
+            audioLists.length > 0 &&
+            <Player />
+          }
+          
+        </AudioListsContext.Provider>
+      </NavContext.Provider>
     </Container>
   );
 }
