@@ -31,7 +31,15 @@ const ChannelListItem = (props) => {
             margin: 1,
             marginTop: 2,
             height: 102,
-        }
+        },
+        title: {
+            fontWeight: 600,
+            margin: 2,
+        },
+        description: {
+            fontWeight: 400,
+            margin: 2,
+        },
     });
 
     return (
@@ -49,10 +57,10 @@ const ChannelListItem = (props) => {
                     horizontal={false}
                     disableShrink={false}>
                     <Stack.Item align='auto'>
-                        <p>{title}</p>
+                        <p className={classNames.title}>{title}</p>
                     </Stack.Item>
                     <Stack.Item align='auto'>
-                        <p>{description}</p>
+                        <p className={classNames.description}>{description}</p>
                     </Stack.Item>
                 </Stack>
             </Stack>
