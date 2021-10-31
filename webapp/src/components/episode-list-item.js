@@ -62,7 +62,6 @@ const EpisodeListItem = (props) => {
             <Stack.Item align='auto'>
                 <p>{title}</p>
                 <p>{description}</p>
-                <p>{id}</p>
                 <a href={mediaUrl} download target='_blank' rel='noreferrer'>Download</a>
                 <button onClick={onPlay}>Play</button>
                 <button onClick={onAddAudio}>Queue</button>

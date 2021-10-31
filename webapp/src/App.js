@@ -47,21 +47,25 @@ function App() {
           <Route path='/' exact component={Ranking} />
           <Route path='/channel/:channelId' exact component={Channel} />
         </BrowserRouter>
-        <ReactJkMusicPlayer
-          audioLists={audioLists}
-          theme='light'
-          mode='full'
-          showLyric={false}
-          showPlayMode={false}
-          showThemeSwitch={false}
-          showReload={false}
-          showDownload={false}
-          onAudioListsChange={onAudioListsChange}
-          showMediaSession
-          quietUpdate
-          clearPriorAudioLists={clearPriorAudioLists}
-          autoplayInitLoadPlayList
-        />
+        {
+          audioLists.length > 0 &&
+          <ReactJkMusicPlayer
+            audioLists={audioLists}
+            theme='light'
+            mode='full'
+            showLyric={false}
+            showPlayMode={false}
+            showThemeSwitch={false}
+            showReload={false}
+            showDownload={false}
+            onAudioListsChange={onAudioListsChange}
+            showMediaSession
+            quietUpdate
+            clearPriorAudioLists={clearPriorAudioLists}
+            autoplayInitLoadPlayList
+          />
+        }
+        
       </AudioListsContext.Provider>
     </div>
   );
