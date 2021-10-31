@@ -1,73 +1,36 @@
 import { useState, useCallback } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
-import ReactJkMusicPlayer from 'react-jinke-music-player'
-import 'react-jinke-music-player/assets/index.css'
+import Container from '@mui/material/Container';
 import { Ranking } from './components/ranking';
 import { Channel } from './components/channel';
 import AudioListsContext from './audio-list-context';
+import HeaderAppBar from './components/app-bar';
+import Player from './components/player';
 
 function App() {
   const [audioLists, setAudioLists] = useState([]);
   const [clearPriorAudioLists, setClearPriorAudioLists] = useState(false);
 
-  const addAudio = useCallback((audioItem) => {
-    const updatedAudioLists = [
-      ...audioLists,
-      audioItem
-    ];
-
-    setAudioLists(updatedAudioLists);
-    setClearPriorAudioLists(false);
-  }, [audioLists, setAudioLists, setClearPriorAudioLists]);
-
-  const playAudio = useCallback((audioItem) => {
-    setAudioLists([audioItem]);
-    setClearPriorAudioLists(true);
+  const setAudioListsWithClear = useCallback((audioLists, clearLists = false) => {
+    setAudioLists(audioLists);
+    setClearPriorAudioLists(clearLists);
   }, [setAudioLists, setClearPriorAudioLists]);
 
-  const onAudioListsChange = useCallback((currentPlayId,updatedAudioLists,audioInfo) => {
-    if (audioLists.length !== updatedAudioLists.length) {
-      setClearPriorAudioLists(true);
-      setAudioLists(updatedAudioLists);
-    } else {
-      for (let i = 0; i < updatedAudioLists.length; i+= 1) {
-        if (updatedAudioLists[i].id !== audioLists[i].id) {
-          setClearPriorAudioLists(true);
-          setAudioLists(updatedAudioLists);
-          break;
-        }
-      }
-    }
-  }, [audioLists, setAudioLists]);
-
   return (
-    <div className="App">
-      <AudioListsContext.Provider value={{audioLists, addAudio, playAudio}}>
+    <Container style={{paddingTop: 65}}>
+      <AudioListsContext.Provider value={{audioLists, clearPriorAudioLists, setAudioListsWithClear}}>
         <BrowserRouter>
+          <HeaderAppBar />
           <Route path='/' exact component={Ranking} />
           <Route path='/channel/:channelId' exact component={Channel} />
         </BrowserRouter>
         {
           audioLists.length > 0 &&
-          <ReactJkMusicPlayer
-            audioLists={audioLists}
-            theme='light'
-            mode='full'
-            showLyric={false}
-            showPlayMode={false}
-            showThemeSwitch={false}
-            showReload={false}
-            showDownload={false}
-            onAudioListsChange={onAudioListsChange}
-            showMediaSession
-            quietUpdate
-            clearPriorAudioLists={clearPriorAudioLists}
-            autoplayInitLoadPlayList
-          />
+          <Player />
         }
         
       </AudioListsContext.Provider>
-    </div>
+    </Container>
   );
 }
 

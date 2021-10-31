@@ -2,8 +2,8 @@ import { createContext } from "react";
 
 const AudioListsContext = createContext({
     audioLists: [],
-    addAudio: () => {},
-    playAudio: () => {},
+    clearPriorAudioLists: () => {},
+    setAudioListsWithClear: () => {},
 });
 
 export default AudioListsContext;
