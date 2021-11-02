@@ -34,12 +34,13 @@ const Player = (props) => {
             showThemeSwitch={false}
             showReload={false}
             showDownload={false}
-            defaultPosition={{left: 0, top: 100}}
+            defaultPosition={{right: 30, top: 100}}
             onAudioListsChange={onAudioListsChange}
             showMediaSession
             quietUpdate
             clearPriorAudioLists={clearPriorAudioLists}
             autoplayInitLoadPlayList
+            glassBg
           />
     )
 };
