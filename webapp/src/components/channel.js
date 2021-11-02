@@ -4,6 +4,7 @@ import Pagination from '@mui/material/Pagination';
 import Grid from '@mui/material/Grid';
 import { useParams  } from 'react-router-dom';
 import { EpisodeListItem } from './episode-list-item';
+import SearchBar from './search-bar';
 
 const pageSize = 20;
 
@@ -14,9 +15,11 @@ const Channel = (props) => {
     const [offset, setOffset] = useState(0);
     const [curPage, setCurPage] = useState(1);
     const [totalCount, setTotalCount] = useState();
+    const [keyword, setSearchKeyword] = useState(null);
 
     useEffect(() => {
-        fetch(`/api/channel/${channelId}?offset=${offset}`).then((res) => {
+        const keywordQuery = keyword ? `&keyword=${keyword}` : '';
+        fetch(`/api/channel/${channelId}?offset=${offset}${keywordQuery}`).then((res) => {
             return res.json();
         }).then((data) => {
             console.log(data);
@@ -25,21 +28,32 @@ const Channel = (props) => {
 
             if (data.summary && data.summary.totalCount) {
                 setTotalCount(data.summary.totalCount);
-            }            
+            }
+            
+            if (data.summary && data.summary.total_count) {
+                setTotalCount(data.summary.total_count);
+            }
+
         });
-    }, [channelId, offset, setEpisodes, setOffset]);
+    }, [channelId, offset, setEpisodes, setOffset, setTotalCount, keyword]);
 
     const onPageChange = useCallback((event, value) => {
         setCurPage(value);
         setOffset(value - 1);
-    }, [setCurPage]);
+    }, [setCurPage, setOffset]);
 
     const totalPageCount = useMemo(() => {
         return Math.ceil(totalCount / pageSize);
-    }, [totalCount])
+    }, [totalCount]);
+
+    const onSearch = useCallback((val) => {
+        setOffset(0);
+        setSearchKeyword(val);
+    }, [setOffset, setSearchKeyword]);
 
     return (
         <Box>
+            <SearchBar onSearch={onSearch} />
             <Grid container>
                 {
                     episodes.length > 0 &&
