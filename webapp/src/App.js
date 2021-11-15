@@ -9,7 +9,7 @@ import HeaderAppBar from './components/app-bar';
 import Player from './components/player';
 import { isElectron } from './common';
 
-const Router = isElectron ? HashRouter : BrowserRouter;
+const Router = isElectron() ? HashRouter : BrowserRouter;
 
 function App() {
   const [currentPage, setCurrentPage] = useState('Home');

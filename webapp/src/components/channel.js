@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import { useParams  } from 'react-router-dom';
 import { EpisodeListItem } from './episode-list-item';
 import SearchBar from './search-bar';
-import { fetchShim } from '../common';
+import { getRepository } from '../data/repository';
 
 const pageSize = 20;
 
@@ -20,9 +20,12 @@ const Channel = (props) => {
 
     useEffect(() => {
         const keywordQuery = keyword ? `&keyword=${keyword}` : '';
-        fetchShim(`/api/channel/${channelId}?offset=${offset}${keywordQuery}`).then((res) => {
-            return res.json();
-        }).then((data) => {
+        getRepository()
+        .getEpisodes(channelId, {
+            offset,
+            keyword: keywordQuery,
+        })
+        .then((data) => {
             console.log(data);
             setEpisodes(data.data);
             setOffset(data.offset);

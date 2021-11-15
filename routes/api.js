@@ -1,5 +1,7 @@
 import express from 'express';
-import { getEpisodes, getChannels, downloadEpisodes } from '../data/podbbang-repo.js';
+import { getEpisodes, getChannels } from '../data/podbbang-repo.js';
+import { downloadEpisodes } from '../data/download-utils.js';
+
 const router = express.Router();
 
 router.get('/channel/:channelId', async (req, res, next) => {
