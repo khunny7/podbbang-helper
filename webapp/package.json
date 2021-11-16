@@ -5,12 +5,9 @@
   "dependencies": {
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
-    "@fluentui/react": "^8.37.5",
     "@mui/icons-material": "^5.0.5",
     "@mui/material": "^5.0.6",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
+    "electron-is-dev": "^2.0.0",
     "lodash": "^4.17.21",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -19,11 +16,17 @@
     "react-scripts": "4.0.3",
     "web-vitals": "^1.1.2"
   },
+  "main": "public/electron.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test",
+    "react-eject": "react-scripts eject",
+    "electron-build": "electron-builder",
+    "release": "npm run react-build && electron-builder --publish=always",
+    "build": "npm run react-build && npm run electron-build",
+    "dev": "concurrently -k \"cross-env BROWSER=none npm run react-start\" \"npm:electron\"",
+    "electron": "wait-on tcp:3000 && electron ."
   },
   "proxy": "http://localhost:3080/",
   "eslintConfig": {
@@ -43,5 +46,21 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "devDependencies": {
+    "concurrently": "^6.3.0",
+    "cross-env": "^7.0.3",
+    "electron": "^15.3.0",
+    "electron-builder": "^22.13.1",
+    "wait-on": "^6.0.0",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3"
+  },
+  "description": "podbbang helper",
+  "author": "Younghoon Gim",
+  "build": {
+    "appId": "com.podbbanghelper"
+  },
+  "homepage": "./"
 }

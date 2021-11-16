@@ -6,7 +6,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import NavContext from '../nav-context';
-// import { ChannelListItem } from './channel-list-item';
+import { getRepository } from '../data/repository';
 
 const ChannelList = (props) => {
     const history = useHistory();
@@ -15,9 +15,9 @@ const ChannelList = (props) => {
     const { setCurrentPage } = useContext(NavContext);
 
     useEffect(() => {
-        fetch('/api/ranking').then((res) => {
-            return res.json();
-        }).then((data) => {
+        getRepository()
+        .getChannels()
+        .then((data) => {
             console.log(data);
             setChannels(data.data);
             setNext(data.next);
