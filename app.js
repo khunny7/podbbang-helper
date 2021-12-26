@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import logger from 'morgan';
 
 import apiRouter from './routes/api.js';
+import proxyRouter from './routes/proxy.js';
 
 const __dirname = path.resolve();
 
@@ -24,20 +25,21 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, './webapp/build')));
 
 
-app.get('/', (req,res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../webapp/build/index.html'));
 });
 
 
 app.use('/api', apiRouter);
+app.use('/proxy', proxyRouter);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

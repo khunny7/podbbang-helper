@@ -1,3 +1,4 @@
+import express from 'express';
 import fetch from 'node-fetch';
 
 const podbbangOptions = {
@@ -19,21 +20,33 @@ const podbbangOptions = {
   "mode": "cors"
 };
 
-const getEpisodes = async (channelId = 16898, {
-  offset = 0,
-  limit = 20,
-  keyword = null,
-} = options) => {
-  const keywordQuery = keyword ? `&keyword=${keyword}` : '';
-  const response = await fetch(`https://app-api6.podbbang.com/channels/${channelId}/episodes?offset=${offset}&limit=${limit}&sort=desc${keywordQuery}`, podbbangOptions);
+const router = express.Router();
+
+const podbbangBaseUrl = 'https://app-api6.podbbang.com';
+
+const proxyToPodbbang = async (req) => {
+  const response = await fetch(podbbangBaseUrl + req.url, podbbangOptions);
 
   return response.json();
-}
+};
 
-const getChannels = async (offset = 0, limit = 20) => {
-  const response = await fetch(`https://app-api6.podbbang.com/ranking?type=hourly&next=0&limit=${limit}&category_id=0`, podbbangOptions);
+router.get('/ranking', async (req, res, next) => {
+  var data = await proxyToPodbbang(req);
 
-  return response.json();
-}
+  res.send(data);
+});
 
-export { getEpisodes, getChannels };
+router.get('/channels/:channelId/episodes', async (req, res, next) => {
+  var data = await proxyToPodbbang(req);
+
+  res.send(data);
+});
+
+router.get('/channels/:channelId/', async (req, res, next) => {
+  var data = await proxyToPodbbang(req);
+
+  res.send(data);
+});
+
+
+export default router;

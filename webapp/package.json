@@ -1,5 +1,5 @@
 {
-  "name": "webapp",
+  "name": "PodbbangUnofficial",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -22,8 +22,8 @@
     "react-build": "react-scripts build",
     "react-test": "react-scripts test",
     "react-eject": "react-scripts eject",
-    "electron-build": "electron-builder",
-    "release": "npm run react-build && electron-builder --publish=always",
+    "electron-build": "electron-builder -w appx",
+    "release": "npm run react-build && electron-builder -w appx --publish=always",
     "build": "npm run react-build && npm run electron-build",
     "dev": "concurrently -k \"cross-env BROWSER=none npm run react-start\" \"npm:electron\"",
     "electron": "wait-on tcp:3000 && electron ."
@@ -60,7 +60,14 @@
   "description": "podbbang helper",
   "author": "Younghoon Gim",
   "build": {
-    "appId": "com.podbbanghelper"
+    "appId": "com.podbbanghelper",
+    "appx": {
+      "publisher": "CN=B3D2417D-BB7D-4AA2-ACED-43B59B9475E0",
+      "identityName": "31546YounghoonGim.Unofficial",
+      "publisherDisplayName": "Piano8283 Studio",
+      "applicationId": "PodbbangUnofficial",
+      "displayName": "팟빵 Unofficial"
+    }
   },
   "homepage": "./"
 }
