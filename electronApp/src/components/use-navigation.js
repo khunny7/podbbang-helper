@@ -1,16 +1,16 @@
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const useNavigation = () => {
-  const navigate = useNavigate();
+  const history = useHistory();
 
   const onChannelSelected = useCallback((channel) => {
-    navigate(`/channel/${channel.id}`);
-  }, [navigate]);
+    history.push(`/channel/${channel.id}`);
+  }, [history]);
 
   const onNavigateHome = useCallback(() => {
-    navigate('/');
-  }, [navigate]);
+    history.push('/');
+  }, [history]);
 
   return { onChannelSelected, onNavigateHome };
 };
