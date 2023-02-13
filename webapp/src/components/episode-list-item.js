@@ -11,7 +11,7 @@ import QueueIcon from '@mui/icons-material/Queue';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import NavContext from '../nav-context';
 
-import { useAudioControl } from './use-audio-control';
+import { onPlay, onAddAudio } from './use-audio-control';
 
 const EpisodeListItem = (props) => {
   const {
@@ -25,7 +25,6 @@ const EpisodeListItem = (props) => {
   } = props;
 
   const { currentPage } = useContext(NavContext);
-  const { onPlay, onAddAudio } = useAudioControl();
 
   const onPlayWithInfo = useCallback(() => {
     return onPlay(
@@ -34,7 +33,7 @@ const EpisodeListItem = (props) => {
       title,
       currentPage,
     );
-  }, [image, mediaUrl, title, currentPage, onPlay]);
+  }, [image, mediaUrl, title, currentPage]);
 
   const onAddAudioWithInfo = useCallback(() => {
     return onAddAudio(
@@ -43,7 +42,7 @@ const EpisodeListItem = (props) => {
       title,
       currentPage,
     );
-  }, [image, mediaUrl, title, currentPage, onAddAudio]);
+  }, [image, mediaUrl, title, currentPage]);
 
   return (
     <Card sx={{ width: 345 }} style={{ margin: 5 }}>

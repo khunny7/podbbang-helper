@@ -6,7 +6,7 @@ import { Channel } from './components/channel';
 import AudioListsContext from './audio-list-context';
 import NavContext from './nav-context';
 import HeaderAppBar from './components/app-bar';
-import Player from './components/player';
+import AudioPlayer from './components/player';
 import { isElectron } from './common';
 
 const Router = isElectron() ? HashRouter : BrowserRouter;
@@ -31,12 +31,8 @@ function App() {
               <Route path='/' exact element={<ChannelList />} />
               <Route path='/channel/:channelId' exact element={<Channel />} />
             </Routes>
-          </Router>
-          {
-            audioLists.length > 0 &&
-            <Player />
-          }
-          
+            <AudioPlayer />
+          </Router>          
         </AudioListsContext.Provider>
       </NavContext.Provider>
     </Container>

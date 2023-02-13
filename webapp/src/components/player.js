@@ -1,48 +1,15 @@
-import { useCallback, useContext } from 'react';
-import ReactJkMusicPlayer from 'react-jinke-music-player'
-import 'react-jinke-music-player/assets/index.css'
-import AudioListsContext from '../audio-list-context';
+import Player from "react-material-music-player";
 import './player.css';
 
-const Player = (props) => {
-    const {
-        audioLists,
-        clearPriorAudioLists,
-        setAudioListsWithClear
-    } = useContext(AudioListsContext);
-
-    const onAudioListsChange = useCallback((currentPlayId,updatedAudioLists,audioInfo) => {
-        if (audioLists.length !== updatedAudioLists.length) {
-            setAudioListsWithClear(updatedAudioLists, true);
-        } else {
-        for (let i = 0; i < updatedAudioLists.length; i+= 1) {
-            if (updatedAudioLists[i].id !== audioLists[i].id) {
-                setAudioListsWithClear(updatedAudioLists, true);
-                break;
-            }
-        }
-        }
-    }, [audioLists, setAudioListsWithClear]);
-
+const AudioPlayer = (props) => {
     return (
-        <ReactJkMusicPlayer
-            audioLists={audioLists}
-            theme='light'
-            mode='full'
-            showLyric={false}
-            showPlayMode={false}
-            showThemeSwitch={false}
-            showReload={false}
-            showDownload={false}
-            defaultPosition={{right: 30, top: 100}}
-            onAudioListsChange={onAudioListsChange}
-            showMediaSession
-            quietUpdate
-            clearPriorAudioLists={clearPriorAudioLists}
-            autoplayInitLoadPlayList
-            glassBg
-          />
+        <Player
+          // disableDrawer
+          sx={{
+            left: 0,
+          }}
+        />
     )
 };
 
-export default Player;
+export default AudioPlayer;
