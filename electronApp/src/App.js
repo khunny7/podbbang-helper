@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { BrowserRouter, HashRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Route } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import ChannelList from './components/channel-list';
 import { Channel } from './components/channel';
@@ -27,10 +27,8 @@ function App() {
         <AudioListsContext.Provider value={{audioLists, clearPriorAudioLists, setAudioListsWithClear}}>
           <Router>
             <HeaderAppBar />
-            <Routes>
-              <Route path='/' exact element={<ChannelList />} />
-              <Route path='/channel/:channelId' exact element={<Channel />} />
-            </Routes>
+            <Route path='/' exact component={ChannelList} />
+            <Route path='/channel/:channelId' exact component={Channel} />
           </Router>
           {
             audioLists.length > 0 &&
