@@ -1,37 +1,28 @@
 
-import { useContext, useCallback } from 'react';
-import AudioListsContext from '../audio-list-context';
+import { Track, PlayerInterface } from "react-material-music-player";
 
-const useAudioControl = () => {
-  const {
-    audioLists,
-    setAudioListsWithClear,
-  } = useContext(AudioListsContext);
-
-  const onPlay = useCallback((cover, musicSrc, name, singer) => {
-    setAudioListsWithClear([{
-      cover,
+const onPlay = (cover, musicSrc, name, singer) => {
+  PlayerInterface.play([
+    new Track(
       musicSrc,
+      cover,
       name,
       singer,
-    }], true);
-  }, [setAudioListsWithClear]);
-
-  const onAddAudio = useCallback((cover, musicSrc, name, singer) => {
-    const updatedAudioLists = [
-      ...audioLists,
-      {
-        cover,
-        musicSrc,
-        name,
-        singer,
-      },
-    ];
-
-    setAudioListsWithClear(updatedAudioLists, false);
-  }, [setAudioListsWithClear, audioLists]);
-
-  return { onPlay, onAddAudio };
+      musicSrc
+    ),
+  ]);
 };
 
-export { useAudioControl };
+const onAddAudio = (cover, musicSrc, name, singer) => {
+  PlayerInterface.playLater([
+    new Track(
+      musicSrc,
+      cover,
+      name,
+      singer,
+      musicSrc
+    ),
+  ]);
+};
+
+export { onPlay, onAddAudio };
