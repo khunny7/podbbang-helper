@@ -1,0 +1,25 @@
+{
+"name": "podbbang-helper-monorepo",
+"private": true,
+
+"workspaces": [
+    "server",
+    "webapp",
+    "electronApp"
+],
+
+"scripts": {
+    "bootstrap": "npm install --workspaces --include-workspace-root",
+
+    "dev:web": "concurrently -k \"npm --workspace server start\" \"npm --workspace webapp start\"",
+
+    "dev:electron": "concurrently -k \"npm --workspace server start\" \"npm --workspace electronApp run dev\"",
+
+    "build:electron": "npm --workspace electronApp run build"
+},
+
+"devDependencies": {
+    "concurrently": "^8.1.0"
+}
+}
+  
