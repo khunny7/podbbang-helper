@@ -1,7 +1,11 @@
 {
-  "name": "PodbbangUnofficial",
+  "name": "podbbang-web",
   "version": "0.1.0",
   "private": true,
+  "description": "Podbbang Helper – web client",
+  "author": "Younghoon Gim",
+  "homepage": "./",
+
   "dependencies": {
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.8",
@@ -13,51 +17,24 @@
     "react-scripts": "^5.0.1",
     "web-vitals": "^1.1.2"
   },
+
   "scripts": {
-    "react-start": "react-scripts start",
-    "react-build": "react-scripts build",
-    "react-test": "react-scripts test",
-    "react-eject": "react-scripts eject",
-    "release": "npm run react-build && electron-builder -w appx --publish=always",
-    "build": "npm run react-build && npm run electron-build"
+    "start":  "react-scripts start",
+    "build":  "react-scripts build",
+    "test":   "react-scripts test",
+    "eject":  "react-scripts eject"
   },
+
   "proxy": "http://localhost:3080/",
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
+  "eslintConfig": { "extends": ["react-app", "react-app/jest"] },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "production": [">0.2%", "not dead", "not op_mini all"],
+    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
   },
+
   "devDependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3",
-    "cross-env": "^7.0.3",
-    "wait-on": "^6.0.0"
-  },
-  "description": "podbbang helper",
-  "author": "Younghoon Gim",
-  "build": {
-    "appId": "com.podbbanghelper",
-    "appx": {
-      "publisher": "CN=B3D2417D-BB7D-4AA2-ACED-43B59B9475E0",
-      "identityName": "31546YounghoonGim.Unofficial",
-      "publisherDisplayName": "Piano8283 Studio",
-      "applicationId": "PodbbangUnofficial",
-      "displayName": "팟빵 Unofficial"
-    }
-  },
-  "homepage": "./"
+    "@testing-library/user-event": "^12.8.3"
+  }
 }

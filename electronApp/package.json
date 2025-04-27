@@ -3,30 +3,14 @@
   "version": "0.1.1",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.5.0",
-    "@emotion/styled": "^11.3.0",
-    "@mui/icons-material": "^5.0.5",
-    "@mui/material": "^5.0.6",
-    "electron-is-dev": "^2.0.0",
-    "lodash": "^4.17.21",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-jinke-music-player": "^4.24.2",
-    "react-router-dom": "^5.3.0",
-    "react-scripts": "4.0.3",
-    "web-vitals": "^1.1.2"
+   "electron-is-dev": "^2.0.0"
   },
-  "main": "public/electron.js",
+  "main": "main.js",
   "scripts": {
-    "react-start": "react-scripts start",
-    "react-build": "react-scripts build",
-    "react-test": "react-scripts test",
-    "react-eject": "react-scripts eject",
-    "electron-build": "npx electron-builder --win appx",
-    "release": "npm run react-build && electron-builder -w appx --publish=always",
-    "build": "npm run react-build && npm run electron-build",
-    "dev": "concurrently -k \"cross-env BROWSER=none npm run react-start\" \"npm:electron\"",
-    "electron": "wait-on tcp:3000 && electron ."
+    "web:dev":   "cross-env BROWSER=none npm --prefix ../webapp start",
+    "web:build": "npm --prefix ../webapp run build",
+    "dev":       "concurrently -k \"npm run web:dev\" \"wait-on tcp:3000 && electron .\"",
+    "build":     "npm run web:build && npx electron-builder --win appx"
   },
   "proxy": "http://localhost:3080/",
   "eslintConfig": {
@@ -35,27 +19,12 @@
       "react-app/jest"
     ]
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "devDependencies": {
     "concurrently": "^6.3.0",
     "cross-env": "^7.0.3",
     "electron": "^35.2.1",
     "electron-builder": "^26.0.12",
-    "wait-on": "^6.0.0",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3"
+    "wait-on": "^6.0.0"
   },
   "description": "Podbbang Unofficial is a unofficial Podbbang client for Windows. This helps to listen to Podbbang's podcast and download them. This is a unofficial client, so it is not related to Podbbang.",
   "author": "Younghoon Gim",
