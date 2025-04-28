@@ -46,6 +46,13 @@
       "**/*",
       "../webapp/dist/**/*"
     ],
+    "extraResources": [
+        {
+          "from": "../webapp/dist",
+          "to": "webapp/dist",
+          "filter": ["**/*"]
+        }
+      ],
     "win": {
            "icon": "build/appx/icon.ico",
          "target": [

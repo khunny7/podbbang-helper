@@ -9,11 +9,15 @@ function create() {
     webPreferences: { contextIsolation: false, nodeIntegration: true }
   });
 
-  const url = isDev
-    ? 'http://localhost:5173'
-    : `file://${path.resolve(__dirname, '../webapp/dist/index.html')}`;
-
-  win.loadURL(url);            // dev ➞ CRA server, prod ➞ built HTML
+   if (isDev) {
+       // CRA dev server
+       win.loadURL('http://localhost:5173');
+     } else {
+       // packaged: serve the extraResources copy
+       const { resourcesPath } = process; 
+       const indexHtml = path.join(resourcesPath, 'webapp', 'dist', 'index.html');
+       win.loadURL(`file://${indexHtml}`);
+     }
   if (isDev) win.webContents.openDevTools({mode: 'detach'});
 }
 
