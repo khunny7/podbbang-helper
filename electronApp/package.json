@@ -10,7 +10,8 @@
     "web:dev":   "cross-env BROWSER=none npm --prefix ../webapp run dev",
     "web:build": "npm --prefix ../webapp run build",
     "dev":       "concurrently -k \"npm run web:dev\" \"wait-on tcp:5173 && electron .\"",
-    "build":     "npm run web:build && npx electron-builder --win appx"
+    "build":     "npm run web:build && npx electron-builder --win appx",
+    "build:local": "cross-env WIN_CSC_LINK=assets/appx/my-cert.pfx WIN_CSC_KEY_PASSWORD=Yg8189823! npm run web:build && npx electron-builder --win nsis"
   },
   "proxy": "http://localhost:3080/",
   "eslintConfig": {
@@ -33,13 +34,24 @@
     "productName": "PodbbangUnofficial",
     "executableName": "PodbbangUnofficial",
     "appId": "com.podbbanghelper",
+    "icon": "build/appx/icon.ico",
     "appx": {
       "publisher": "CN=B3D2417D-BB7D-4AA2-ACED-43B59B9475E0",
       "identityName": "31546YounghoonGim.Unofficial",
       "publisherDisplayName": "Piano8283 Studio",
       "applicationId": "PodbbangUnofficial",
       "displayName": "팟빵 Unofficial"
-    }
+    },
+    "files": [
+      "**/*",
+      "../webapp/dist/**/*"
+    ],
+    "win": {
+           "icon": "build/appx/icon.ico",
+         "target": [
+             "nsis"
+           ]
+         }
   },
   "homepage": "https://podbbang-helper.piano8283.com/"
 }

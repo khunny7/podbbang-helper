@@ -11,7 +11,7 @@ function create() {
 
   const url = isDev
     ? 'http://localhost:5173'
-    : `file://${path.resolve(__dirname, '../webapp/build/index.html')}`;
+    : `file://${path.resolve(__dirname, '../webapp/dist/index.html')}`;
 
   win.loadURL(url);            // dev ➞ CRA server, prod ➞ built HTML
   if (isDev) win.webContents.openDevTools({mode: 'detach'});
