@@ -5,8 +5,8 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
-import NavContext from '../nav-context';
-import { useNavigation } from './use-navigation';
+import NavContext from '../contexts/nav-context';
+import { useNavigation } from '../hooks/use-navigation';
 
 const HeaderAppBar = () => {
   const { onNavigateHome } = useNavigation();

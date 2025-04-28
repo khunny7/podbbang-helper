@@ -10,7 +10,7 @@ function create() {
   });
 
   const url = isDev
-    ? 'http://localhost:3000'
+    ? 'http://localhost:5173'
     : `file://${path.resolve(__dirname, '../webapp/build/index.html')}`;
 
   win.loadURL(url);            // dev ➞ CRA server, prod ➞ built HTML

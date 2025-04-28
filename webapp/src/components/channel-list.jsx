@@ -4,9 +4,9 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import NavContext from '../nav-context';
-import { useChannelList } from './use-channel-list';
-import { useNavigation } from './use-navigation';
+import NavContext from '../contexts/nav-context';
+import { useChannelList } from '../hooks/use-channel-list';
+import { useNavigation } from '../hooks/use-navigation';
 
 const ChannelList = (props) => {
   const { setCurrentPage } = useContext(NavContext);

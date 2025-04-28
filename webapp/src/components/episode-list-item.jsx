@@ -9,9 +9,9 @@ import IconButton from '@mui/material/IconButton';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 import QueueIcon from '@mui/icons-material/Queue';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
-import NavContext from '../nav-context';
+import NavContext from '../contexts/nav-context';
 
-import { onPlay, onAddAudio } from './use-audio-control';
+import { onPlay, onAddAudio } from '../hooks/use-audio-control';
 
 const EpisodeListItem = (props) => {
   const {

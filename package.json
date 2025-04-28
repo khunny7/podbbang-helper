@@ -11,7 +11,7 @@
 "scripts": {
     "bootstrap": "npm install --workspaces --include-workspace-root",
 
-    "dev:web": "concurrently -k \"npm --workspace server start\" \"npm --workspace webapp start\"",
+    "dev:web": "concurrently -k \"npm --workspace server start\" \"npm --workspace webapp run dev\"",
 
     "dev:electron": "concurrently -k \"npm --workspace server start\" \"npm --workspace electronApp run dev\"",
 

@@ -5,36 +5,47 @@
   "description": "Podbbang Helper – web client",
   "author": "Younghoon Gim",
   "homepage": "./",
-
   "dependencies": {
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.8",
     "lodash": "^4.17.21",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-material-music-player": "^1.1.9",
     "react-router-dom": "^6.8.1",
-    "react-scripts": "^5.0.1",
     "web-vitals": "^1.1.2"
   },
-
   "scripts": {
-    "start":  "react-scripts start",
-    "build":  "react-scripts build",
-    "test":   "react-scripts test",
-    "eject":  "react-scripts eject"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --ext .js,.jsx"
   },
-
-  "proxy": "http://localhost:3080/",
-  "eslintConfig": { "extends": ["react-app", "react-app/jest"] },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
-    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   },
-
   "devDependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
-    "@testing-library/user-event": "^12.8.3"
+    "@testing-library/user-event": "^12.8.3",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "5.1.4",
+    "rollup": "3.29.4"
   }
 }

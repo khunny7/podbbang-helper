@@ -7,9 +7,9 @@
   },
   "main": "main.js",
   "scripts": {
-    "web:dev":   "cross-env BROWSER=none npm --prefix ../webapp start",
+    "web:dev":   "cross-env BROWSER=none npm --prefix ../webapp run dev",
     "web:build": "npm --prefix ../webapp run build",
-    "dev":       "concurrently -k \"npm run web:dev\" \"wait-on tcp:3000 && electron .\"",
+    "dev":       "concurrently -k \"npm run web:dev\" \"wait-on tcp:5173 && electron .\"",
     "build":     "npm run web:build && npx electron-builder --win appx"
   },
   "proxy": "http://localhost:3080/",
@@ -22,8 +22,8 @@
   "devDependencies": {
     "concurrently": "^6.3.0",
     "cross-env": "^7.0.3",
-    "electron": "^35.2.1",
-    "electron-builder": "^26.0.12",
+    "electron": "35.2.1",
+    "electron-builder": "26.0.12",
     "wait-on": "^6.0.0"
   },
   "description": "Podbbang Unofficial is a unofficial Podbbang client for Windows. This helps to listen to Podbbang's podcast and download them. This is a unofficial client, so it is not related to Podbbang.",

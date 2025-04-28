@@ -2,10 +2,10 @@ import { useContext, useEffect,React } from 'react';
 import Box from '@mui/material/Box';
 import Pagination from '@mui/material/Pagination';
 import Grid from '@mui/material/Grid';
-import NavContext from '../nav-context';
+import NavContext from '../contexts/nav-context';
 import { EpisodeListItem } from './episode-list-item';
 import SearchBar from './search-bar';
-import { useChannel } from './use-channel';
+import { useChannel } from '../hooks/use-channel';
 
 const Channel = (props) => {
   const {
