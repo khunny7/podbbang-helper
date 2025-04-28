@@ -4,7 +4,7 @@
   "private": true,
   "description": "Podbbang Helper – web client",
   "author": "Younghoon Gim",
-  "homepage": "./",
+  "homepage": ".",
   "dependencies": {
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.8",

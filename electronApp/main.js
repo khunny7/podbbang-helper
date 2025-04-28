@@ -15,7 +15,7 @@ function create() {
      } else {
        // packaged: serve the extraResources copy
        const { resourcesPath } = process; 
-       const indexHtml = path.join(resourcesPath, 'webapp', 'dist', 'index.html');
+       const indexHtml = path.join(resourcesPath, 'dist', 'index.html');
        win.loadURL(`file://${indexHtml}`);
      }
   if (isDev) win.webContents.openDevTools({mode: 'detach'});

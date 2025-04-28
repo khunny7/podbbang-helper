@@ -42,14 +42,10 @@
       "applicationId": "PodbbangUnofficial",
       "displayName": "팟빵 Unofficial"
     },
-    "files": [
-      "**/*",
-      "../webapp/dist/**/*"
-    ],
     "extraResources": [
         {
           "from": "../webapp/dist",
-          "to": "webapp/dist",
+          "to": "dist",
           "filter": ["**/*"]
         }
       ],
