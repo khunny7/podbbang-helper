@@ -6,7 +6,10 @@ function create() {
   const win = new BrowserWindow({
     width: 1000,
     height: 700,
-    webPreferences: { contextIsolation: false, nodeIntegration: true }
+    webPreferences: { 
+      contextIsolation: false, 
+      nodeIntegration: true 
+    }
   });
 
    if (isDev) {

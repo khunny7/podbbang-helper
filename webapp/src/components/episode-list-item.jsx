@@ -1,19 +1,22 @@
 import { useContext, useCallback, React } from 'react';
 import PropTypes from 'prop-types';
 import NavContext from '../contexts/nav-context';
-import { onPlay, onAddAudio } from '../hooks/use-audio-control';
+import AudioListsContext from '../contexts/audio-list-context';
+import { onPlay } from '../hooks/use-audio-control';
 import './episode-list-item.css';
 
 const EpisodeListItem = (props) => {
   const {
+    id,
     title,
     description,
-    image,
+    image = null,
     mediaUrl,
-    updatedAt,
+    updatedAt = null,
   } = props;
 
   const { currentPage } = useContext(NavContext);
+  const { addToPlaylist } = useContext(AudioListsContext);
 
   const onPlayWithInfo = useCallback(() => {
     return onPlay(
@@ -25,13 +28,17 @@ const EpisodeListItem = (props) => {
   }, [image, mediaUrl, title, currentPage]);
 
   const onAddAudioWithInfo = useCallback(() => {
-    return onAddAudio(
+    const episode = {
+      id,
+      title,
+      description,
       image,
       mediaUrl,
-      title,
-      currentPage,
-    );
-  }, [image, mediaUrl, title, currentPage]);
+      updatedAt
+    };
+    console.log('🎵 Adding episode to playlist:', episode.title);
+    addToPlaylist(episode);
+  }, [id, title, description, image, mediaUrl, updatedAt, addToPlaylist]);
 
   const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -131,10 +138,5 @@ EpisodeListItem.propTypes = {
   mediaUrl: PropTypes.string.isRequired,
   updatedAt: PropTypes.string,
 };
-
-EpisodeListItem.defaultProps = {
-  image: null,
-  updatedAt: null,
-}
 
 export { EpisodeListItem }

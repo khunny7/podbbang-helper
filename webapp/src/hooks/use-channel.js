@@ -2,6 +2,7 @@
 import { useEffect, useState, useCallback, useMemo, React } from 'react';
 import { useParams } from 'react-router-dom';
 import { getEpisodes, getChannelInfo } from '../data/repository';
+import { useRecentChannels } from './use-persisted-state';
 
 const pageSize = 20;
 
@@ -14,6 +15,7 @@ const useChannel = () => {
   const [totalCount, setTotalCount] = useState();
   const [curPage, setCurPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const { addRecentChannel } = useRecentChannels();
 
   // Reset state when channel changes
   useEffect(() => {
@@ -23,6 +25,18 @@ const useChannel = () => {
     setCurPage(1);
     setTotalCount(undefined);
   }, [channelId]);
+
+  // Add to recent channels when channel info is loaded
+  useEffect(() => {
+    if (channelInfo) {
+      addRecentChannel({
+        id: channelInfo.id,
+        title: channelInfo.title,
+        image: channelInfo.image,
+        description: channelInfo.description
+      });
+    }
+  }, [channelInfo, addRecentChannel]);
 
   useEffect(() => {
     console.log('🔍 Channel Effect Triggered:', { channelId, currentOffset, keyword });
