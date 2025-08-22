@@ -5,7 +5,7 @@ import App from './App';
 
 const container = document.getElementById('root');
 const root = createRoot(container);
-root.render(
-<React.StrictMode>
-  <App />
-</React.StrictMode>);
+
+// Temporarily disabled StrictMode to check for double API calls
+// Re-enable for production: <React.StrictMode><App /></React.StrictMode>
+root.render(<App />);

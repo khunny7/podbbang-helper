@@ -1,23 +1,27 @@
 {
-  "name": "podbbang-helper",
+  "name": "podbbang-helper-server-legacy",
   "version": "0.0.0",
   "private": true,
   "type": "module",
+  "description": "Legacy local proxy server (DEPRECATED - kept for reference only)",
   "scripts": {
-    "start": "node ./bin/www"
+    "_comment": "Scripts removed - this server is no longer used"
   },
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
-    "download": "^8.0.0",
-    "express": "~4.16.1",
-    "http-errors": "~1.6.3",
-    "jade": "^1.11.0",
-    "lodash": "^4.17.21",
-    "morgan": "^1.10.0",
-    "node-fetch": "^3.0.0",
-    "node-id3": "^0.2.3",
-    "sanitize-filename": "^1.6.3"
+  "_dependencies_removed": {
+    "_comment": "Dependencies removed since this server is deprecated",
+    "_original_dependencies": [
+      "body-parser",
+      "cookie-parser", 
+      "debug",
+      "download",
+      "express",
+      "http-errors",
+      "jade",
+      "lodash",
+      "morgan",
+      "node-fetch",
+      "node-id3",
+      "sanitize-filename"
+    ]
   }
 }

@@ -13,6 +13,7 @@ const Channel = (props) => {
     channelInfo,
     onPageChange,
     onSearch,
+    loading,
   } = useChannel();
 
   const { setCurrentPage } = useContext(NavContext);
@@ -61,7 +62,12 @@ const Channel = (props) => {
           <SearchBar onSearch={onSearch} />
         </div>
 
-        {episodes.length > 0 ? (
+        {loading ? (
+          <div className="loading-episodes">
+            <div className="loading-spinner"></div>
+            <p>Loading episodes...</p>
+          </div>
+        ) : episodes.length > 0 ? (
           <div className="episodes-section">
             <h2 className="section-title">Episodes</h2>
             <div className="episodes-grid">

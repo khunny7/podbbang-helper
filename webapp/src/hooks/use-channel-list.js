@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, React } from 'react';
+import { useState, useEffect, useCallback, useRef, React } from 'react';
 import { getChannels } from '../data/repository';
 
 const pageSize = 50;
@@ -9,13 +9,15 @@ const useChannelList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const initializeRef = useRef(false);
 
   const fetchChannels = useCallback(async (page = 1) => {
     setLoading(true);
     try {
       const offset = (page - 1) * pageSize;
+      console.log('📡 Fetching channels for page:', page, 'offset:', offset);
       const response = await getChannels(offset, pageSize);
-      console.log('API Response:', response);
+      console.log('✅ Channel list API response received');
       
       setChannels(response.data || []);
       setCurrentPage(page);
@@ -34,19 +36,26 @@ const useChannelList = () => {
       setNext(response.next || null);
       
     } catch (error) {
-      console.error('Error fetching channels:', error);
+      console.error('❌ Error fetching channels:', error);
     } finally {
       setLoading(false);
     }
   }, []);
 
   const onPageChange = useCallback((page) => {
-    fetchChannels(page);
-  }, [fetchChannels]);
+    console.log('🔄 Page change requested:', page, 'current:', currentPage);
+    if (page !== currentPage) {
+      fetchChannels(page);
+    }
+  }, [fetchChannels, currentPage]);
 
   useEffect(() => {
-    fetchChannels(1);
-  }, [fetchChannels]);
+    if (!initializeRef.current) {
+      console.log('🚀 Initializing channel list');
+      initializeRef.current = true;
+      fetchChannels(1);
+    }
+  }, []); // Empty dependency array to run only once
 
   return { 
     channels, 

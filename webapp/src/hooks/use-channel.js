@@ -1,5 +1,5 @@
 
-import { useEffect, useState, useCallback, useMemo,React } from 'react';
+import { useEffect, useState, useCallback, useMemo, React } from 'react';
 import { useParams } from 'react-router-dom';
 import { getEpisodes, getChannelInfo } from '../data/repository';
 
@@ -10,50 +10,76 @@ const useChannel = () => {
   const [keyword, setSearchKeyword] = useState(null);
   const [episodes, setEpisodes] = useState([]);
   const [channelInfo, setChannelInfo] = useState(null);
-  const [offset, setOffset] = useState(0);
+  const [currentOffset, setCurrentOffset] = useState(0);
   const [totalCount, setTotalCount] = useState();
   const [curPage, setCurPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+
+  // Reset state when channel changes
+  useEffect(() => {
+    setEpisodes([]);
+    setChannelInfo(null);
+    setCurrentOffset(0);
+    setCurPage(1);
+    setTotalCount(undefined);
+  }, [channelId]);
 
   useEffect(() => {
-    const keywordQuery = keyword ? `&keyword=${keyword}` : '';
-    const getEpisodesPromise = getEpisodes(channelId, {
-      offset,
-      keyword: keywordQuery,
-    });
-    const getChannleInfoPromise = getChannelInfo(channelId);
-    Promise.all([getEpisodesPromise, getChannleInfoPromise])
-      .then(([episodesData, channelData]) => {
-        // console.log(episodesData);
-        // console.log(channelData);
+    console.log('🔍 Channel Effect Triggered:', { channelId, currentOffset, keyword });
+    
+    const fetchData = async () => {
+      setLoading(true);
+      // Reset episodes when starting a new fetch to prevent showing old data
+      if (currentOffset === 0) {
+        setEpisodes([]);
+      }
+      
+      try {
+        console.log('📡 Making API calls for channel:', channelId);
+        const [episodesData, channelData] = await Promise.all([
+          getEpisodes(channelId, {
+            offset: currentOffset,
+            keyword: keyword,
+          }),
+          getChannelInfo(channelId)
+        ]);
+
+        console.log('✅ API calls completed for channel:', channelId);
         setEpisodes(episodesData.data);
-        setOffset(episodesData.offset);
         setChannelInfo(channelData);
 
         if (episodesData.summary && episodesData.summary.totalCount) {
           setTotalCount(episodesData.summary.totalCount);
-        }
-
-        if (episodesData.summary && episodesData.summary.total_count) {
+        } else if (episodesData.summary && episodesData.summary.total_count) {
           setTotalCount(episodesData.summary.total_count);
         }
-      });
-  }, [channelId, offset, setEpisodes, setOffset, setTotalCount, setChannelInfo, keyword]);
+      } catch (error) {
+        console.error('❌ Error fetching channel data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [channelId, currentOffset, keyword]);
 
   const onPageChange = useCallback((event, value) => {
     setCurPage(value);
-    setOffset(value - 1);
-  }, [setCurPage, setOffset]);
+    const newOffset = (value - 1) * pageSize;
+    setCurrentOffset(newOffset);
+  }, []);
 
   const totalPageCount = useMemo(() => {
     return Math.ceil(totalCount / pageSize);
   }, [totalCount]);
 
   const onSearch = useCallback((val) => {
-    setOffset(0);
+    setCurrentOffset(0);
+    setCurPage(1);
     setSearchKeyword(val);
-  }, [setOffset, setSearchKeyword]);
+  }, []);
 
-  return { episodes, curPage, totalPageCount, channelInfo, onPageChange, onSearch };
+  return { episodes, curPage, totalPageCount, channelInfo, onPageChange, onSearch, loading };
 };
 
 export { useChannel };

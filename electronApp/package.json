@@ -1,6 +1,6 @@
 {
   "name": "PodbbangUnofficial",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "dependencies": {
    "electron-is-dev": "^2.0.0"
@@ -13,7 +13,6 @@
     "build":     "npm run web:build && npx electron-builder --win appx",
     "build:local": "cross-env WIN_CSC_LINK=assets/appx/my-cert.pfx WIN_CSC_KEY_PASSWORD=Yg8189823! npm run web:build && npx electron-builder --win nsis"
   },
-  "proxy": "http://localhost:3080/",
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -34,13 +33,14 @@
     "productName": "PodbbangUnofficial",
     "executableName": "PodbbangUnofficial",
     "appId": "com.podbbanghelper",
-    "icon": "build/appx/icon.ico",
+    "icon": "assets/appx/Square256x256Logo.png",
     "appx": {
       "publisher": "CN=B3D2417D-BB7D-4AA2-ACED-43B59B9475E0",
       "identityName": "31546YounghoonGim.Unofficial",
       "publisherDisplayName": "Piano8283 Studio",
       "applicationId": "PodbbangUnofficial",
-      "displayName": "팟빵 Unofficial"
+      "displayName": "팟빵 Unofficial",
+      "languages": ["en-US", "ko-KR"]
     },
     "extraResources": [
         {
@@ -50,9 +50,12 @@
         }
       ],
     "win": {
-           "icon": "build/appx/icon.ico",
+           "icon": "assets/appx/Square256x256Logo.png",
          "target": [
-             "nsis"
+             {
+               "target": "appx",
+               "arch": ["x64"]
+             }
            ]
          }
   },

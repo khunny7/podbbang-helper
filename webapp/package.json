@@ -2,7 +2,7 @@
   "name": "podbbang-web",
   "version": "0.1.0",
   "private": true,
-  "description": "Podbbang Helper – web client",
+  "description": "Podbbang Helper – web client (uses Vercel serverless proxy)",
   "author": "Younghoon Gim",
   "homepage": ".",
   "dependencies": {

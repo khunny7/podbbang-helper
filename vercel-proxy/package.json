@@ -1,0 +1,15 @@
+{
+  "name": "podbbang-proxy-vercel",
+  "version": "1.0.0",
+  "description": "Vercel serverless proxy for Podbbang API",
+  "scripts": {
+    "start": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}

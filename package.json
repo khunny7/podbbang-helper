@@ -3,23 +3,22 @@
 "private": true,
 
 "workspaces": [
-    "server",
     "webapp",
-    "electronApp"
+    "electronApp",
+    "vercel-proxy"
 ],
 
-"scripts": {
+  "scripts": {
     "bootstrap": "npm install --workspaces --include-workspace-root",
 
-    "dev:web": "concurrently -k \"npm --workspace server start\" \"npm --workspace webapp run dev\"",
+    "dev:web": "npm --workspace webapp run dev",
+    "dev:electron": "npm --workspace electronApp run dev",
 
-    "dev:electron": "concurrently -k \"npm --workspace server start\" \"npm --workspace electronApp run dev\"",
-
-    "build:electron": "npm --workspace electronApp run build"
-},
-
-"devDependencies": {
-    "concurrently": "^8.1.0"
-}
+    "build:electron": "npm --workspace electronApp run build",
+    "build:web": "npm --workspace webapp run build",
+    
+    "proxy:dev": "npm --workspace vercel-proxy run start",
+    "proxy:deploy": "npm --workspace vercel-proxy run deploy"
+  }
 }
   

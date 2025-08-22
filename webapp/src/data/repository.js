@@ -4,13 +4,7 @@ const podbbangOptions = {
   "headers": {
     "accept": "application/json, text/plain, */*",
     "accept-language": "en-US,en;q=0.9,ko;q=0.8",
-    "refcode": "null",
-    "sec-ch-ua": "\"Chromium\";v=\"94\", \"Microsoft Edge\";v=\"94\", \";Not A Brand\";v=\"99\"",
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": "\"Windows\"",
-    "sec-fetch-dest": "empty",
-    "sec-fetch-mode": "cors",
-    "sec-fetch-site": "same-site"
+    "refcode": "null"
   },
   "referrer": "https://www.podbbang.com/",
   "referrerPolicy": "strict-origin-when-cross-origin",
@@ -19,8 +13,8 @@ const podbbangOptions = {
   "mode": "cors"
 };
 
-// Electron app directly gets from podbbang, and web uses proxy server running on node
-const baseUrl = isElectron() ? 'https://app-api6.podbbang.com' : '/proxy';
+// Electron app directly gets from podbbang, and web uses individual Vercel proxy endpoints
+const baseUrl = isElectron() ? 'https://app-api6.podbbang.com' : 'https://vercel-proxy-five-sage.vercel.app/api';
 
 const getEpisodes = async (channelId = 16898, options = {
   offset: 0,
@@ -29,13 +23,13 @@ const getEpisodes = async (channelId = 16898, options = {
 }) => {
   const { offset, keyword } = options;
   const keywordQuery = keyword ? `&keyword=${keyword}` : '';
-  const response = await fetch(`${baseUrl}/channels/${channelId}/episodes?offset=${offset}&limit=20&sort=desc${keywordQuery}`, podbbangOptions);
+  const response = await fetch(`${baseUrl}/episodes/${channelId}?offset=${offset}&limit=20&sort=desc${keywordQuery}`, podbbangOptions);
 
   return response.json();
 };
 
 const getChannelInfo = async (channelId = 16898) => {
-  const response = await fetch(`${baseUrl}/channels/${channelId}/`, podbbangOptions);
+  const response = await fetch(`${baseUrl}/channel/${channelId}`, podbbangOptions);
 
   return response.json();
 };

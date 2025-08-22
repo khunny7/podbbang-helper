@@ -5,13 +5,7 @@ export default defineConfig({
   base: './',
   plugins: [react()],
   server: {
-    port: 5173,
-    proxy: {
-      '/proxy': {  // <--- fix here
-        target: 'http://localhost:3080',
-        changeOrigin: true,
-        rewrite: (path) => path  // don't strip /proxy
-      }
-    }
+    port: 5173
+    // Note: Proxy configuration removed - webapp now uses Vercel serverless proxy
   }
 });
