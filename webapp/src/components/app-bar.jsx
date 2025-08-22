@@ -26,7 +26,7 @@ const HeaderAppBar = () => {
           >
             <div className="logo">
               <span className="logo-icon">🎧</span>
-              <span className="logo-text">PodCast</span>
+              <span className="logo-text">Podbbang</span>
             </div>
           </button>
           

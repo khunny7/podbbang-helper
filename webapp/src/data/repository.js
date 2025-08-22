@@ -40,8 +40,9 @@ const getChannelInfo = async (channelId = 16898) => {
   return response.json();
 };
 
-const getChannels = async (offset = 0) => {
-  const response = await fetch(`${baseUrl}/ranking?type=hourly&next=0&limit=20&category_id=0`, podbbangOptions);
+const getChannels = async (offset = 0, limit = 20) => {
+  const createTime = Math.floor(Date.now() / 1000); // Current timestamp in seconds
+  const response = await fetch(`${baseUrl}/ranking-new?type=hourly&category_id=0&create_time=${createTime}&offset=${offset}&limit=${limit}`, podbbangOptions);
 
   return response.json();
 };

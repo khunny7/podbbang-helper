@@ -30,7 +30,7 @@ const proxyToPodbbang = async (req) => {
   return response.json();
 };
 
-router.get('/ranking', async (req, res, next) => {
+router.get('/ranking-new', async (req, res, next) => {
   var data = await proxyToPodbbang(req);
 
   res.send(data);
