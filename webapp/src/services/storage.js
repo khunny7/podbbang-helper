@@ -12,24 +12,23 @@ class StorageService {
   get(key, defaultValue = null) {
     try {
       const stored = localStorage.getItem(key);
-      console.log(`📖 Raw storage lookup for ${key}:`, {
-        rawValue: stored,
-        isNull: stored === null,
-        isUndefined: stored === 'undefined',
-        defaultValue: defaultValue
-      });
       
+      // Only log raw lookups if there's an issue
       if (stored === null || stored === 'undefined' || stored === 'null') {
         console.log(`📖 No valid data for key: ${key}, using default:`, defaultValue);
         return defaultValue;
       }
+      
       const value = JSON.parse(stored);
-      console.log(`📖 Loaded from storage: ${key}`, {
-        parsedValue: value,
-        type: typeof value,
-        isArray: Array.isArray(value),
-        length: Array.isArray(value) ? value.length : 'N/A'
-      });
+      // Only log successful loads in development or for debugging
+      if (process.env.NODE_ENV === 'development' && !window._storageLoggedKeys?.has(key)) {
+        window._storageLoggedKeys = window._storageLoggedKeys || new Set();
+        window._storageLoggedKeys.add(key);
+        console.log(`📖 Loaded from storage: ${key}`, {
+          parsedValue: value,
+          type: typeof value
+        });
+      }
       return value;
     } catch (error) {
       console.error(`Storage get error for key ${key}:`, error);
@@ -67,23 +66,25 @@ class StorageService {
       }
       
       localStorage.setItem(key, jsonValue);
-      console.log(`💾 Saved to storage: ${key}`, {
-        value: value,
-        serialized: jsonValue,
-        type: typeof value,
-        isArray: Array.isArray(value),
-        length: Array.isArray(value) ? value.length : 'N/A'
-      });
       
-      // Verify it was saved correctly by reading it back
+      // Only log storage saves for important keys or in development mode
+      if (process.env.NODE_ENV === 'development' && (key.includes('playlist') || key.includes('episode'))) {
+        console.log(`💾 Saved to storage: ${key}`, {
+          value: value,
+          serialized: jsonValue,
+          type: typeof value,
+          isArray: Array.isArray(value),
+          length: Array.isArray(value) ? value.length : 'N/A'
+        });
+      }
+      
+      // Verify it was saved correctly by reading it back (but don't log success)
       const verification = localStorage.getItem(key);
       if (verification !== jsonValue) {
         console.error(`❌ Storage verification failed for ${key}:`, {
           saved: jsonValue,
           retrieved: verification
         });
-      } else {
-        console.log(`✅ Storage verification passed for ${key}`);
       }
     } catch (error) {
       console.error('Storage set error:', error);

@@ -7,10 +7,10 @@ import App from './App';
 const container = document.getElementById('root');
 const root = createRoot(container);
 
-// Re-enable StrictMode now that persistence is fixed
-// Note: Some warnings from react-material-music-player are expected (deprecated lifecycle methods)
+// Temporarily disable StrictMode to reduce double rendering during development
+// Note: Re-enable for production builds
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <App />
-  </React.StrictMode>
+  // </React.StrictMode>
 );

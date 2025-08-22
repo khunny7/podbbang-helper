@@ -19,6 +19,7 @@
   --accent-primary: #6366f1;
   --accent-secondary: #8b5cf6;
   --accent-tertiary: #ec4899;
+  --accent-primary-subtle: rgba(99, 102, 241, 0.1);
   --accent-gradient: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
   
   --text-primary: #f8fafc;
@@ -172,6 +173,7 @@ body::before {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: var(--space-2xl) var(--space-lg);
+  padding-bottom: 120px; /* Account for fixed audio player */
   width: 100%;
 }
 

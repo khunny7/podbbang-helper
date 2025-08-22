@@ -17,18 +17,27 @@ const AUDIO_ACTIONS = {
   LOAD_PERSISTED_STATE: 'LOAD_PERSISTED_STATE'
 };
 
-// Function to get initial state from storage
+// Function to get initial state from storage (cached to prevent multiple calls)
+let _initialStateCache = null;
+let _hasInitialized = false;
+
 const getInitialState = () => {
+  // Return cached state to prevent multiple storage reads
+  if (_initialStateCache && _hasInitialized) {
+    return _initialStateCache;
+  }
+  
+  // Only log if this is the first initialization
+  if (!_hasInitialized) {
+    console.log('🎛️ Initializing audio context state...');
+    _hasInitialized = true;
+  }
+  
   // Load saved values or use defaults
   const savedVolume = storageService.get(STORAGE_KEYS.VOLUME, 1);
   const savedPlaybackSpeed = storageService.get(STORAGE_KEYS.PLAYBACK_SPEED, 1);
   
-  console.log('🎛️ Initializing state with saved values:', {
-    savedVolume,
-    savedPlaybackSpeed
-  });
-  
-  return {
+  _initialStateCache = {
     playlist: [], // Will be loaded separately in useEffect
     currentEpisode: null, // Will be loaded separately in useEffect
     currentIndex: -1,
@@ -39,6 +48,8 @@ const getInitialState = () => {
     playbackSpeed: savedPlaybackSpeed,
     isLoading: false
   };
+  
+  return _initialStateCache;
 };
 
 // Audio reducer

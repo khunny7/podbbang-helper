@@ -5,7 +5,7 @@ import { Channel } from './components/channel';
 import { AudioListsProvider } from './contexts/audio-list-context.jsx';
 import NavContext from './contexts/nav-context';
 import HeaderAppBar from './components/app-bar';
-import AudioPlayer from './components/player';
+import ModernAudioPlayer from './components/modern-audio-player';
 import { isElectron } from './common';
 import './layout.css';
 
@@ -26,7 +26,7 @@ function App() {
                 <Route path='/channel/:channelId' exact element={<Channel />} />
               </Routes>
             </main>
-            <AudioPlayer />
+            <ModernAudioPlayer />
           </Router>          
         </AudioListsProvider>
       </NavContext.Provider>

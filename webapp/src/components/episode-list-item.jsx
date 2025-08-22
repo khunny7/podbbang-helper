@@ -1,7 +1,7 @@
 import { useContext, useCallback, React } from 'react';
 import PropTypes from 'prop-types';
 import NavContext from '../contexts/nav-context';
-import AudioListsContext from '../contexts/audio-list-context';
+import AudioListsContext from '../contexts/audio-list-context.jsx';
 import { onPlay } from '../hooks/use-audio-control';
 import './episode-list-item.css';
 

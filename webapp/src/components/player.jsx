@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import Player from "react-material-music-player";
-import AudioListsContext from '../contexts/audio-list-context';
+import AudioListsContext from '../contexts/audio-list-context.jsx';
 import './player.css';
 
 // Define comprehensive classes for the player components to avoid prop warnings
