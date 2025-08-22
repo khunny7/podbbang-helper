@@ -1,76 +1,72 @@
 import PropTypes from 'prop-types';
-import { useState, useCallback,React } from 'react';
-import { styled, alpha } from '@mui/material/styles';
-import InputBase from '@mui/material/InputBase';
-import SearchIcon from '@mui/icons-material/Search';
-import IconButton from '@mui/material/IconButton';
-
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
-  },
-}));
-
-// const SearchIconWrapper = styled('div')(({ theme }) => ({
-//   padding: theme.spacing(0, 2),
-//   height: '100%',
-//   position: 'absolute',
-//   pointerEvents: 'none',
-//   display: 'flex',
-//   alignItems: 'center',
-//   justifyContent: 'center',
-// }));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
+import { useState, useCallback, React } from 'react';
+import './search-bar.css';
 
 const SearchBar = (props) => {
   const { onSearch } = props;
   const [inputValue, setInputValue] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
 
   const onInputChange = useCallback((event) => {
     setInputValue(event.target.value);
   }, [setInputValue]);
 
+  const submitSearch = () => {
+    onSearch(inputValue);
+  };
+
+  const onKeyDown = (e) => {
+    if (e.key === 'Enter') submitSearch();
+  };
+
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
+
+  const clearSearch = () => {
+    setInputValue('');
+    onSearch('');
+  };
+
   return (
-    <Search>
-      <IconButton color="primary" onClick={() => { console.log(inputValue); onSearch(inputValue);}}>
-          <SearchIcon />
-        </IconButton>
-      <StyledInputBase
-        placeholder="Search…"
-        inputProps={{ 'aria-label': 'search' }}
-        value={inputValue}
-        onChange={onInputChange}
-      />
-    </Search>
-  )
+    <div className={`search-container ${isFocused ? 'focused' : ''}`}>
+      <div className="search-input-wrapper">
+        <span className="search-icon" aria-hidden="true">🔍</span>
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search episodes..."
+          aria-label="Search episodes"
+          value={inputValue}
+          onChange={onInputChange}
+          onKeyDown={onKeyDown}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+        {inputValue && (
+          <button
+            className="clear-button"
+            onClick={clearSearch}
+            aria-label="Clear search"
+            type="button"
+          >
+            ✕
+          </button>
+        )}
+      </div>
+      <button 
+        className="search-button"
+        onClick={submitSearch}
+        aria-label="Search"
+        type="button"
+      >
+        Search
+      </button>
+    </div>
+  );
 };
 
 SearchBar.propTypes = {
   onSearch: PropTypes.func.isRequired,
 };
-
 
 export default SearchBar;

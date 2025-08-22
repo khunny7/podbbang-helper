@@ -6,8 +6,6 @@
   "author": "Younghoon Gim",
   "homepage": ".",
   "dependencies": {
-    "@mui/icons-material": "^5.11.0",
-    "@mui/material": "^5.11.8",
     "lodash": "^4.17.21",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",

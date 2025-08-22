@@ -1,39 +1,54 @@
-import { useContext,React } from 'react';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import HomeIcon from '@mui/icons-material/Home';
+import { useContext, React, useState, useEffect } from 'react';
 import NavContext from '../contexts/nav-context';
 import { useNavigation } from '../hooks/use-navigation';
+import './app-bar.css';
 
 const HeaderAppBar = () => {
   const { onNavigateHome } = useNavigation();
   const { currentPage } = useContext(NavContext);
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
 
   return (
-    <AppBar position='fixed'>
-      <Toolbar>
-        <IconButton
-          size="large"
-          edge="start"
-          color="inherit"
-          aria-label="menu"
-          sx={{ mr: 2 }}
-          onClick={onNavigateHome}
-        >
-          <HomeIcon />
-        </IconButton>
-        <Breadcrumbs aria-label='breadcrumb'>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: '#FFFFFF' }}>
-            {currentPage}
-          </Typography>
-        </Breadcrumbs>
-        {/* <Button color="inherit">Login</Button> */}
-      </Toolbar>
-    </AppBar>
-  )
+    <header className="navbar">
+      <div className="navbar-content">
+        <div className="navbar-left">
+          <button 
+            className="logo-button" 
+            onClick={onNavigateHome}
+            aria-label="Go to home"
+          >
+            <div className="logo">
+              <span className="logo-icon">🎧</span>
+              <span className="logo-text">PodCast</span>
+            </div>
+          </button>
+          
+          <nav className="breadcrumb">
+            <span className="breadcrumb-current">{currentPage}</span>
+          </nav>
+        </div>
+        
+        <div className="navbar-right">
+          <button 
+            className="theme-toggle"
+            onClick={toggleTheme}
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`}
+          >
+            <span className="theme-icon">
+              {theme === 'dark' ? '☀️' : '🌙'}
+            </span>
+          </button>
+        </div>
+      </div>
+    </header>
+  );
 };
 
 export default HeaderAppBar;
