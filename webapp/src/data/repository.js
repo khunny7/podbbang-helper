@@ -13,8 +13,8 @@ const podbbangOptions = {
   "mode": "cors"
 };
 
-// Electron app directly gets from podbbang, and web uses individual Vercel proxy endpoints
-const baseUrl = isElectron() ? 'https://app-api6.podbbang.com' : 'https://vercel-proxy-five-sage.vercel.app/api';
+// Use the same Vercel proxy for both web and electron to avoid CORS issues
+const baseUrl = 'https://vercel-proxy-five-sage.vercel.app/api';
 
 const getEpisodes = async (channelId = 16898, options = {
   offset: 0,
