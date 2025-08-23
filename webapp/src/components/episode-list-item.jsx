@@ -1,8 +1,6 @@
-import { useContext, useCallback, React } from 'react';
+import React, { useContext, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import NavContext from '../contexts/nav-context';
 import AudioListsContext from '../contexts/audio-list-context.jsx';
-import { onPlay } from '../hooks/use-audio-control';
 import './episode-list-item.css';
 
 const EpisodeListItem = (props) => {
@@ -15,17 +13,21 @@ const EpisodeListItem = (props) => {
     updatedAt = null,
   } = props;
 
-  const { currentPage } = useContext(NavContext);
-  const { addToPlaylist } = useContext(AudioListsContext);
+  const { addToPlaylist, setCurrentEpisode } = useContext(AudioListsContext);
 
   const onPlayWithInfo = useCallback(() => {
-    return onPlay(
+    const episode = {
+      id,
+      title,
+      description,
       image,
       mediaUrl,
-      title,
-      currentPage,
-    );
-  }, [image, mediaUrl, title, currentPage]);
+      updatedAt
+    };
+    console.log('🎵 Playing episode:', episode.title);
+    setCurrentEpisode(episode);
+    addToPlaylist(episode);
+  }, [id, title, description, image, mediaUrl, updatedAt, setCurrentEpisode, addToPlaylist]);
 
   const onAddAudioWithInfo = useCallback(() => {
     const episode = {

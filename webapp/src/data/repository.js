@@ -1,5 +1,3 @@
-import { isElectron } from "../common";
-
 const podbbangOptions = {
   "headers": {
     "accept": "application/json, text/plain, */*",
