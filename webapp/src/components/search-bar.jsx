@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types';
 import { useState, useCallback, React } from 'react';
+import { useTranslation } from '../contexts/language-context';
 import './search-bar.css';
 
 const SearchBar = (props) => {
   const { onSearch } = props;
+  const { t } = useTranslation();
   const [inputValue, setInputValue] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
@@ -34,8 +36,8 @@ const SearchBar = (props) => {
         <input
           type="text"
           className="search-input"
-          placeholder="Search episodes..."
-          aria-label="Search episodes"
+          placeholder={t('Search episodes...')}
+          aria-label={t('Search episodes')}
           value={inputValue}
           onChange={onInputChange}
           onKeyDown={onKeyDown}
@@ -46,7 +48,7 @@ const SearchBar = (props) => {
           <button
             className="clear-button"
             onClick={clearSearch}
-            aria-label="Clear search"
+            aria-label={t('Clear search')}
             type="button"
           >
             ✕
@@ -56,10 +58,10 @@ const SearchBar = (props) => {
       <button 
         className="search-button"
         onClick={submitSearch}
-        aria-label="Search"
+        aria-label={t('Search')}
         type="button"
       >
-        Search
+        {t('Search')}
       </button>
     </div>
   );

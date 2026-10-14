@@ -81,7 +81,7 @@
   --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
   
   /* Layout */
-  --nav-height: 72px;
+  --nav-height: 64px;
   --sidebar-width: 280px;
   --player-height: 96px;
   --max-width: 1400px;
@@ -172,7 +172,7 @@ body::before {
   flex: 1;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: var(--space-2xl) var(--space-lg);
+  padding: var(--space-lg) var(--space-lg);
   padding-bottom: 120px; /* Account for fixed audio player */
   width: 100%;
 }
@@ -374,6 +374,12 @@ p {
 .btn-ghost:hover {
   background: var(--surface-secondary);
   border-color: var(--border-moderate);
+  color: var(--text-primary);
+}
+
+.btn-ghost:focus-visible {
+  background: var(--surface-secondary);
+  color: var(--text-primary);
 }
 
 .btn-icon {
@@ -457,18 +463,19 @@ p {
 /* Responsive Design */
 @media (max-width: 1024px) {
   .main-content {
-    padding: var(--space-xl) var(--space-md);
+    padding: var(--space-md) var(--space-md);
+    padding-bottom: 120px;
   }
 }
 
 @media (max-width: 768px) {
   :root {
     --nav-height: 64px;
-    --player-height: 80px;
   }
   
   .main-content {
-    padding: var(--space-lg) var(--space-md);
+    padding: var(--space-md) var(--space-md);
+    padding-bottom: 120px;
   }
   
   .card-body {
@@ -482,6 +489,7 @@ p {
 
 @media (max-width: 640px) {
   .main-content {
-    padding: var(--space-md) var(--space-sm);
+    padding: var(--space-sm) var(--space-sm);
+    padding-bottom: 120px;
   }
 }

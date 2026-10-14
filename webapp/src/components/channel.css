@@ -59,6 +59,14 @@
   display: flex;
   align-items: center;
   gap: var(--space-lg);
+  flex-wrap: wrap;
+}
+
+.channel-header-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
 }
 
 .episode-count {
@@ -92,6 +100,77 @@
   gap: var(--space-xl);
 }
 
+.episodes-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+}
+
+.episodes-heading-tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.episode-selection-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  color: var(--text-tertiary);
+  font-size: var(--font-size-sm);
+}
+
+.select-page-control {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.download-message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border: 1px solid var(--border-moderate);
+  border-radius: var(--radius-md);
+  background: var(--surface-primary);
+  color: var(--text-secondary);
+}
+
+.download-message-error {
+  border-color: rgba(239, 68, 68, 0.45);
+  color: var(--status-error);
+}
+
+.channel-download-status {
+  flex-wrap: wrap;
+}
+
+.download-message button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.download-message button.channel-download-cancel {
+  padding: 6px 10px;
+  border: 1px solid var(--border-moderate);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
 .section-title {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-semibold);
@@ -101,8 +180,8 @@
 
 .episodes-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: var(--space-xl);
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 10px;
 }
 
 /* Empty Episodes */
@@ -239,8 +318,8 @@
 /* Responsive Design */
 @media (max-width: 1024px) {
   .episodes-grid {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: var(--space-lg);
+    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+    gap: 8px;
   }
 }
 
@@ -263,8 +342,8 @@
   }
   
   .episodes-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--space-md);
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    gap: var(--space-sm);
   }
   
   .content-header {
@@ -285,7 +364,7 @@
   
   .episodes-grid {
     grid-template-columns: 1fr;
-    gap: var(--space-lg);
+    gap: var(--space-sm);
   }
   
   .pagination-buttons {
@@ -295,5 +374,87 @@
   .page-btn {
     min-width: 40px;
     height: 40px;
+  }
+}
+
+.episodes-grid.is-list-view {
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.episodes-grid.is-list-view .episode-card {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr) auto;
+  align-items: stretch;
+  height: auto;
+  min-height: 84px;
+}
+
+.episodes-grid.is-list-view .episode-card .card-media {
+  grid-column: 1;
+  grid-row: 1;
+  height: 84px;
+}
+
+.episodes-grid.is-list-view .episode-card .card-body {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  justify-content: center;
+  padding: 8px 12px;
+}
+
+.episodes-grid.is-list-view .episode-card .card-description {
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
+
+.episodes-grid.is-list-view .episode-card .card-actions {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: center;
+  width: max-content;
+  max-width: 100%;
+  padding: 6px;
+  border-top: 0;
+  background: transparent;
+}
+
+.episodes-grid.is-list-view .episode-card .action-btn {
+  flex: 0 0 auto;
+  min-height: 32px;
+  padding: 5px 8px;
+}
+
+@media (max-width: 640px) {
+  .episodes-heading-tools {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .episodes-grid.is-list-view .episode-card {
+    grid-template-columns: 76px minmax(0, 1fr);
+  }
+
+  .episodes-grid.is-list-view .episode-card .card-media {
+    grid-column: 1;
+    grid-row: 1;
+    height: 74px;
+    min-height: 74px;
+  }
+
+  .episodes-grid.is-list-view .episode-card .card-body {
+    grid-column: 2;
+    grid-row: 1;
+    padding: 7px 9px;
+  }
+
+  .episodes-grid.is-list-view .episode-card .card-actions {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: flex-end;
+    width: auto;
+    max-width: none;
+    padding: 4px 6px;
   }
 }

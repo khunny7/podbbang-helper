@@ -71,6 +71,8 @@ typings/
 # dotenv environment variables file
 .env
 .env.test
+electronApp/assets/*.pfx
+electronApp/release/
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache

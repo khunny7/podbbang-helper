@@ -1,25 +1,22 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-// Expose protected methods that allow the renderer process to use
-// the ipcRenderer without exposing the entire object
 contextBridge.exposeInMainWorld('electronAPI', {
-  // Storage methods
-  store: {
-    get: (key, defaultValue) => ipcRenderer.invoke('storage:get', key, defaultValue),
-    set: (key, value) => ipcRenderer.invoke('storage:set', key, value),
-    delete: (key) => ipcRenderer.invoke('storage:delete', key),
-    clear: () => ipcRenderer.invoke('storage:clear'),
-    getAll: () => ipcRenderer.invoke('storage:getAll')
-  },
-  
-  // File system methods
-  writeFile: (filePath, content) => ipcRenderer.invoke('file:write', filePath, content),
-  readFile: (filePath) => ipcRenderer.invoke('file:read', filePath),
-  
-  // Utility methods
-  getStoragePath: () => ipcRenderer.invoke('storage:getPath'),
-  
-  // App info
   isElectron: true,
-  platform: process.platform
+  platform: process.platform,
+  downloads: {
+    getState: () => ipcRenderer.invoke('downloads:get-state'),
+    enqueue: episode => ipcRenderer.invoke('downloads:enqueue', episode),
+    enqueueMany: episodes => ipcRenderer.invoke('downloads:enqueue-many', episodes),
+    cancel: jobId => ipcRenderer.invoke('downloads:cancel', jobId),
+    retry: jobId => ipcRenderer.invoke('downloads:retry', jobId),
+    chooseFolder: () => ipcRenderer.invoke('downloads:choose-folder'),
+    showFile: jobId => ipcRenderer.invoke('downloads:show-file', jobId),
+    clearFinished: () => ipcRenderer.invoke('downloads:clear-finished'),
+    onUpdate: callback => {
+      if (typeof callback !== 'function') return () => {};
+      const listener = (_event, update) => callback(update);
+      ipcRenderer.on('downloads:update', listener);
+      return () => ipcRenderer.removeListener('downloads:update', listener);
+    },
+  },
 });

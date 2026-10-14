@@ -1,13 +1,21 @@
-import { useEffect, useContext, React } from 'react';
+import { useEffect, useContext, useState } from 'react';
 import NavContext from '../contexts/nav-context';
 import { useChannelList } from '../hooks/use-channel-list';
-import { useNavigation } from '../hooks/use-navigation';
+import { useTranslation } from '../contexts/language-context';
+import { usePersistedState } from '../hooks/use-persisted-state';
+import ChannelCard from './channel-card';
+import ViewModeToggle from './view-mode-toggle';
 import './channel-list.css';
 
-const ChannelList = (props) => {
+const ChannelList = () => {
   const { setCurrentPage } = useContext(NavContext);
-  const { channels, next, currentPage, totalPages, loading, onPageChange } = useChannelList();
-  const { onChannelSelected } = useNavigation();
+  const { t } = useTranslation();
+  const [viewMode, setViewMode] = usePersistedState('podbbang_channel_view_mode', 'card', false);
+  const [searchInput, setSearchInput] = useState('');
+  const {
+    channels, currentPage, totalPages, totalChannels, loading, error, onPageChange, retry,
+    rankingType, categoryId, onRankingTypeChange, onCategoryChange, onSearch, searchQuery,
+  } = useChannelList();
 
   useEffect(() => {
     setCurrentPage('Discover');
@@ -19,65 +27,122 @@ const ChannelList = (props) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const submitSearch = event => {
+    event.preventDefault();
+    onSearch(searchInput);
+  };
+
+  const clearSearch = () => {
+    setSearchInput('');
+    onSearch('');
+  };
+
   return (
     <div className="channel-list-page">
       <div className="page-header">
-        <h1 className="page-title">Discover Podbbang</h1>
-        <p className="page-subtitle">
-          Explore amazing Podbbang channels and discover your next favorite show
-        </p>
+        <div className="page-heading-copy">
+          <h1 className="page-title">{t('Podcast rankings')}</h1>
+          <p className="page-subtitle">
+            {t('Find popular Podbbang shows by ranking period and category')}
+          </p>
+        </div>
+        <ViewModeToggle mode={viewMode} onChange={setViewMode} />
       </div>
+
+      <section className="ranking-controls" aria-label={t('Podcast ranking filters')}>
+        <div className="ranking-periods" role="group" aria-label={t('Ranking period')}>
+          <button
+            type="button"
+            className={`ranking-period ${rankingType === 'hourly' ? 'is-selected' : ''}`}
+            aria-pressed={rankingType === 'hourly'}
+            onClick={() => onRankingTypeChange('hourly')}
+          >
+            {t('Hourly')}
+          </button>
+          <button
+            type="button"
+            className={`ranking-period ${rankingType === 'weekly' ? 'is-selected' : ''}`}
+            aria-pressed={rankingType === 'weekly'}
+            onClick={() => onRankingTypeChange('weekly')}
+          >
+            {t('Weekly')}
+          </button>
+        </div>
+        <label className="ranking-category-picker">
+          <span className="sr-only">{t('Podcast category')}</span>
+          <select
+            aria-label={t('Podcast category')}
+            value={String(categoryId)}
+            onChange={event => onCategoryChange(event.target.value)}
+          >
+          {categories.map(category => (
+            <option
+              key={category.id}
+              value={String(category.id)}
+            >
+              {t(category.label)}
+            </option>
+          ))}
+          </select>
+          <span className="ranking-category-chevron" aria-hidden="true">⌄</span>
+        </label>
+        <form className="channel-search" role="search" onSubmit={submitSearch}>
+          <label className="sr-only" htmlFor="channel-search-input">{t('Search channels')}</label>
+          <input
+            id="channel-search-input"
+            type="search"
+            value={searchInput}
+            onChange={event => setSearchInput(event.target.value)}
+            placeholder={t('Search channels...')}
+            autoComplete="off"
+          />
+          {(searchInput || searchQuery) && (
+            <button
+              className="channel-search-clear"
+              type="button"
+              onClick={clearSearch}
+              aria-label={t('Clear search')}
+              title={t('Clear search')}
+            >
+              ×
+            </button>
+          )}
+          <button className="channel-search-submit" type="submit" aria-label={t('Search')} title={t('Search')}>
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <circle cx="8.5" cy="8.5" r="5.5" />
+              <path d="m12.5 12.5 4 4" />
+            </svg>
+          </button>
+        </form>
+        {!loading && !error && (
+          <p className="ranking-result-count" aria-live="polite">
+            {searchQuery
+              ? t('{count} results', { count: totalChannels.toLocaleString() })
+              : t('{count} shows', { count: (totalChannels || channels.length).toLocaleString() })}
+          </p>
+        )}
+      </section>
+
+      {error && (
+        <div className="empty-state" role="alert">
+          <h3>{t('Channels could not be loaded')}</h3>
+          <p>{t(error)}</p>
+          <button className="btn btn-primary" type="button" onClick={retry}>{t('Try again')}</button>
+        </div>
+      )}
 
       {loading && (
         <div className="loading-state">
           <div className="loading-spinner"></div>
-          <p>Loading Podbbang...</p>
+          <p>{t(searchQuery ? 'Searching channels...' : 'Loading Podbbang...')}</p>
         </div>
       )}
 
-      {!loading && channels.length > 0 ? (
+      {!loading && !error && channels.length > 0 ? (
         <>
-          <div className="channels-grid">
-            {channels.map((channel) => (
-              <article 
-                key={channel.id} 
-                className="channel-card card animate-fade-in"
-                onClick={() => onChannelSelected(channel)}
-                tabIndex={0}
-                role="button"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    onChannelSelected(channel);
-                  }
-                }}
-              >
-                <div className="card-media">
-                  {channel.image ? (
-                    <img 
-                      src={channel.image} 
-                      alt={`${channel.title} Podbbang artwork`}
-                      loading="lazy"
-                    />
-                  ) : (
-                    <div className="placeholder-image">
-                      <span className="placeholder-icon">🎧</span>
-                    </div>
-                  )}
-                  <div className="card-overlay">
-                    <button className="play-button" aria-label="View channel">
-                      <span>▶</span>
-                    </button>
-                  </div>
-                </div>
-                
-                <div className="card-body">
-                  <h3 className="card-title">{channel.title}</h3>
-                  <p className="card-description">
-                    {channel.description || 'Discover episodes from this amazing Podbbang channel'}
-                  </p>
-                </div>
-              </article>
+          <div className={`channels-grid${viewMode === 'list' ? ' is-list-view' : ''}`}>
+            {channels.map(channel => (
+              <ChannelCard key={channel.id} channel={channel} />
             ))}
           </div>
 
@@ -85,7 +150,7 @@ const ChannelList = (props) => {
           {totalPages > 1 && (
             <div className="pagination">
               <div className="pagination-info">
-                Page {currentPage} of {totalPages}
+                {t('Page {page} of {total}', { page: currentPage, total: totalPages })}
               </div>
               <div className="pagination-buttons">
                 {/* Previous button */}
@@ -93,27 +158,23 @@ const ChannelList = (props) => {
                   <button
                     className="page-btn"
                     onClick={() => handlePageClick(currentPage - 1)}
-                    aria-label="Go to previous page"
+                    aria-label={t('Go to previous page')}
                   >
-                    ‹ Previous
+                    ‹ {t('Previous')}
                   </button>
                 )}
 
                 {/* Page numbers */}
                 {Array.from({ length: Math.min(10, totalPages) }, (_, i) => {
-                  const page = i + 1;
-                  // Show pages around current page (5 before, 5 after)
-                  const startPage = Math.max(1, currentPage - 5);
-                  const endPage = Math.min(totalPages, currentPage + 5);
-                  
-                  if (page < startPage || page > endPage) return null;
+                  const startPage = Math.min(Math.max(1, currentPage - 4), Math.max(1, totalPages - 9));
+                  const page = startPage + i;
                   
                   return (
                     <button
                       key={page}
                       className={`page-btn ${page === currentPage ? 'active' : ''}`}
                       onClick={() => handlePageClick(page)}
-                      aria-label={`Go to page ${page}`}
+                      aria-label={t('Go to page {page}', { page })}
                     >
                       {page}
                     </button>
@@ -125,24 +186,45 @@ const ChannelList = (props) => {
                   <button
                     className="page-btn"
                     onClick={() => handlePageClick(currentPage + 1)}
-                    aria-label="Go to next page"
+                    aria-label={t('Go to next page')}
                   >
-                    Next ›
+                    {t('Next')} ›
                   </button>
                 )}
               </div>
             </div>
           )}
         </>
-      ) : !loading ? (
+      ) : !loading && !error ? (
         <div className="empty-state">
           <div className="empty-icon">🎧</div>
-          <h3>No Podbbang Found</h3>
-          <p>We're having trouble loading Podbbang channels right now. Please try again later.</p>
+          <h3>{t(searchQuery ? 'No matching channels' : 'No shows found')}</h3>
+          <p>{t(searchQuery
+            ? 'No channels match your search. Try another search or clear it.'
+            : 'There are no shows in this ranking yet. Try another period or category.')}</p>
+          {searchQuery && (
+            <button className="btn btn-ghost" type="button" onClick={clearSearch}>{t('Clear search')}</button>
+          )}
         </div>
       ) : null}
     </div>
   );
 };
+
+const categories = [
+  { id: 0, label: 'All' },
+  { id: 1029, label: 'Culture' },
+  { id: 1024, label: 'Entertainment' },
+  { id: 1026, label: 'Current affairs' },
+  { id: 1027, label: 'Economy' },
+  { id: 1038, label: 'Business' },
+  { id: 1039, label: 'Lifestyle & talk' },
+  { id: 1025, label: 'Language learning' },
+  { id: 1028, label: 'Books' },
+  { id: 1031, label: 'Pop culture' },
+  { id: 1030, label: 'Sports & leisure' },
+  { id: 1032, label: 'Broadcasters' },
+  { id: 1033, label: 'Religion' },
+];
 
 export default ChannelList;

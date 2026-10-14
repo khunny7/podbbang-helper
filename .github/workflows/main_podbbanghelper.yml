@@ -14,28 +14,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - name: Set up Node.js version
-        uses: actions/setup-node@v1
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
         with:
-          node-version: '14.x'
+          node-version: '20.x'
+          cache: npm
+          cache-dependency-path: package-lock.json
 
-      - name: yarn install, build, and test
-        run: |
-          yarn install
-          npm run build --if-present
-          npm run test --if-present
-          cd webapp
-          yarn install
-          npm run react-build --if-present
-          cd ..
+      - name: Install workspace dependencies
+        run: npm ci
+
+      - name: Build the web application
+        run: npm run build:web
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: zip -r release.zip . -x "*/node_modules/*" ".git/*" "electronApp/assets/*.pfx"
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: node-app
           path: release.zip
@@ -49,7 +47,7 @@ jobs:
 
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: node-app
         
@@ -58,7 +56,7 @@ jobs:
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
+        uses: azure/webapps-deploy@v3
         with:
           app-name: 'podbbanghelper'
           slot-name: 'Production'

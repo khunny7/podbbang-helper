@@ -1,0 +1,30 @@
+.favorite-toggle {
+  position: absolute;
+  z-index: 2;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-moderate);
+  border-radius: var(--radius-full);
+  background: var(--surface-primary);
+  color: var(--text-secondary);
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), color var(--transition-fast);
+}
+
+.favorite-toggle:hover {
+  transform: scale(1.08);
+}
+
+.favorite-toggle.is-favorite {
+  color: var(--status-error);
+}
+
+.favorite-toggle:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}

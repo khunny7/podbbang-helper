@@ -20,11 +20,6 @@ export const usePersistedState = (key, initialValue, debounce = true, debounceMs
   // Use ref to track current state for functional updates
   const stateRef = useRef(state);
   
-  // Update ref when state changes
-  useEffect(() => {
-    stateRef.current = state;
-  }, [state]);
-
   // Save to storage function
   const saveToStorage = useCallback((value) => {
     storageService.set(key, value);
@@ -34,7 +29,7 @@ export const usePersistedState = (key, initialValue, debounce = true, debounceMs
   const setPersistedState = useCallback((value) => {
     // Handle functional updates using the ref to avoid circular dependency
     const resolvedValue = typeof value === 'function' ? value(stateRef.current) : value;
-    
+    stateRef.current = resolvedValue;
     setState(resolvedValue);
 
     if (debounce) {
@@ -58,9 +53,10 @@ export const usePersistedState = (key, initialValue, debounce = true, debounceMs
     return () => {
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
+        saveToStorage(stateRef.current);
       }
     };
-  }, []);
+  }, [saveToStorage]);
 
   return [state, setPersistedState];
 };
@@ -95,11 +91,21 @@ export const usePlaybackPosition = (episodeId) => {
     }
   }, [setPositions, episodeId]);
 
+  const savePositionImmediately = useCallback((position, id = episodeId) => {
+    if (!id) return;
+    const savedPositions = storageService.get('podbbang_playback_positions', {});
+    storageService.set('podbbang_playback_positions', {
+      ...(savedPositions && typeof savedPositions === 'object' ? savedPositions : {}),
+      [id]: position,
+    });
+  }, [episodeId]);
+
   return {
     position: getPosition(),
     setPosition,
     removePosition,
-    getPosition
+    getPosition,
+    savePositionImmediately
   };
 };
 
@@ -108,27 +114,31 @@ export const usePlaybackPosition = (episodeId) => {
  */
 export const useFavorites = () => {
   const [favorites, setFavorites] = usePersistedState('podbbang_favorites', []);
+  const savedFavorites = Array.isArray(favorites) ? favorites : [];
 
   const addFavorite = useCallback((item) => {
     setFavorites(prev => {
       // Avoid duplicates
-      const exists = prev.some(fav => fav.id === item.id && fav.type === item.type);
+      const entries = Array.isArray(prev) ? prev : [];
+      const exists = entries.some(fav => String(fav.id) === String(item.id) && fav.type === item.type);
       if (exists) return prev;
       
-      return [...prev, { ...item, addedAt: Date.now() }];
+      return [...entries, { ...item, addedAt: Date.now() }];
     });
   }, [setFavorites]);
 
   const removeFavorite = useCallback((id, type) => {
-    setFavorites(prev => prev.filter(fav => !(fav.id === id && fav.type === type)));
+    setFavorites(prev => (Array.isArray(prev) ? prev : []).filter(
+      fav => !(String(fav.id) === String(id) && fav.type === type)
+    ));
   }, [setFavorites]);
 
   const isFavorite = useCallback((id, type) => {
-    return favorites.some(fav => fav.id === id && fav.type === type);
-  }, [favorites]);
+    return savedFavorites.some(fav => String(fav.id) === String(id) && fav.type === type);
+  }, [savedFavorites]);
 
   return {
-    favorites,
+    favorites: savedFavorites,
     addFavorite,
     removeFavorite,
     isFavorite
@@ -140,18 +150,20 @@ export const useFavorites = () => {
  */
 export const useRecentChannels = (maxRecent = 10) => {
   const [recentChannels, setRecentChannels] = usePersistedState('podbbang_recent_channels', []);
+  const savedRecentChannels = Array.isArray(recentChannels) ? recentChannels : [];
 
   const addRecentChannel = useCallback((channel) => {
     setRecentChannels(prev => {
       // Remove if already exists
-      const filtered = prev.filter(ch => ch.id !== channel.id);
+      const filtered = (Array.isArray(prev) ? prev : [])
+        .filter(ch => String(ch.id) !== String(channel.id));
       // Add to front and limit to maxRecent
       return [{ ...channel, lastVisited: Date.now() }, ...filtered].slice(0, maxRecent);
     });
   }, [setRecentChannels, maxRecent]);
 
   return {
-    recentChannels,
+    recentChannels: savedRecentChannels,
     addRecentChannel
   };
 };

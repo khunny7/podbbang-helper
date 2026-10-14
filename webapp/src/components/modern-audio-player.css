@@ -150,25 +150,58 @@
   flex: 1;
   cursor: pointer;
   padding: var(--space-sm) 0;
+  height: 20px;
+  appearance: none;
+  background: transparent;
+  accent-color: var(--accent-primary);
 }
 
-.progress-track {
+.progress-bar::-webkit-slider-runnable-track {
   height: 4px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(to right, var(--accent-primary) var(--progress), var(--surface-secondary) var(--progress));
+}
+
+.progress-bar::-moz-range-track {
+  height: 4px;
+  border-radius: var(--radius-full);
   background: var(--surface-secondary);
-  border-radius: var(--radius-full);
-  overflow: hidden;
-  position: relative;
 }
 
-.progress-fill {
-  height: 100%;
+.progress-bar::-moz-range-progress {
+  height: 4px;
+  border-radius: var(--radius-full);
   background: var(--accent-primary);
-  border-radius: var(--radius-full);
-  transition: width 0.1s ease;
 }
 
-.progress-bar:hover .progress-track {
-  height: 6px;
+.progress-bar::-webkit-slider-thumb {
+  width: 12px;
+  height: 12px;
+  margin-top: -4px;
+  appearance: none;
+  border-radius: 50%;
+  background: var(--accent-primary);
+}
+
+.progress-bar::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent-primary);
+}
+
+.progress-bar:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 3px;
+}
+
+.player-error {
+  margin: 0;
+  padding: var(--space-xs) var(--space-lg);
+  color: var(--status-error);
+  font-size: var(--font-size-xs);
+  background: var(--surface-primary);
 }
 
 /* Right controls */
@@ -330,9 +363,46 @@
   gap: var(--space-md);
   padding: var(--space-md);
   border-radius: var(--radius-md);
-  cursor: pointer;
+  cursor: default;
   transition: all var(--transition-fast);
   position: relative;
+}
+
+.playlist-item-select {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: var(--space-md);
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.playlist-item-select:focus-visible,
+.queue-remove-btn:focus-visible,
+.queue-clear-btn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+.queue-remove-btn,
+.queue-clear-btn {
+  padding: var(--space-sm);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.queue-remove-btn:hover,
+.queue-clear-btn:hover {
+  color: var(--text-primary);
+  background: var(--surface-secondary);
 }
 
 .playlist-item:hover {
@@ -342,6 +412,10 @@
 .playlist-item.active {
   background: var(--accent-primary-subtle);
   border-left: 3px solid var(--accent-primary);
+}
+
+.playlist-item.active .playlist-item-select {
+  font-weight: var(--font-weight-semibold);
 }
 
 .playlist-item-artwork {
@@ -408,6 +482,33 @@
 
 /* Responsive design */
 @media (max-width: 768px) {
+  :root {
+    --player-height: 216px;
+  }
+
+  .player-bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .episode-info {
+    grid-column: 1 / -1;
+    min-width: 0;
+  }
+
+  .player-controls {
+    grid-column: 1 / -1;
+    max-width: none;
+    margin: 0;
+  }
+
+  .right-controls {
+    grid-column: 1 / -1;
+    justify-content: center;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
   .player-bar {
     padding: var(--space-sm);
     gap: var(--space-sm);
@@ -429,6 +530,12 @@
     gap: var(--space-sm);
   }
 
+  .control-buttons .control-btn {
+    width: 32px;
+    min-width: 32px;
+    font-size: var(--font-size-xs);
+  }
+
   .control-btn {
     width: 36px;
     height: 36px;
@@ -446,6 +553,10 @@
     gap: var(--space-sm);
   }
 
+  .sleep-timer-select {
+    max-width: 76px;
+  }
+
   .time-display {
     min-width: 35px;
   }
@@ -457,8 +568,9 @@
     height: 40px;
   }
 
-  .episode-info {
-    min-width: 120px;
+  .speed-select,
+  .sleep-timer-select {
+    max-width: 76px;
   }
 
   .player-controls {

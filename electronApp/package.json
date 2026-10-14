@@ -1,17 +1,18 @@
 {
   "name": "PodbbangUnofficial",
-  "version": "0.1.3",
+  "version": "0.1.7",
   "private": true,
   "dependencies": {
-   "electron-is-dev": "^2.0.0"
+    "electron-is-dev": "^2.0.0"
   },
   "main": "main.js",
   "scripts": {
-    "web:dev":   "cross-env BROWSER=none npm --prefix ../webapp run dev",
-    "web:build": "npm --prefix ../webapp run build",
-    "dev":       "concurrently -k \"npm run web:dev\" \"wait-on tcp:5173 && electron .\"",
-    "build":     "npm run web:build && npx electron-builder --win appx",
-    "build:local": "cross-env WIN_CSC_LINK=assets/appx/my-cert.pfx WIN_CSC_KEY_PASSWORD=Yg8189823! npm run web:build && npx electron-builder --win nsis"
+    "web:dev": "cross-env BROWSER=none npm --prefix ../webapp run dev",
+    "web:build": "cross-env ELECTRON_BUILD=true npm --prefix ../webapp run build",
+    "dev": "concurrently -k \"npm run web:dev\" \"wait-on tcp:5173 && electron .\"",
+    "build": "npm run build:store",
+    "build:store": "npm run web:build && npx electron-builder --win appx --x64 --publish never && powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify-store-package.ps1",
+    "build:local": "npm run web:build && npx electron-builder --win nsis"
   },
   "eslintConfig": {
     "extends": [
@@ -40,24 +41,36 @@
       "publisherDisplayName": "Piano8283 Studio",
       "applicationId": "PodbbangUnofficial",
       "displayName": "팟빵 Unofficial",
-      "languages": ["en-US", "ko-KR"]
+      "languages": [
+        "en-US",
+        "ko-KR"
+      ],
+      "minVersion": "10.0.14316.0"
     },
     "extraResources": [
-        {
-          "from": "../webapp/dist",
-          "to": "dist",
-          "filter": ["**/*"]
-        }
-      ],
+      {
+        "from": "../webapp/dist",
+        "to": "dist",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "files": [
+      "**/*",
+      "!assets/**/*.pfx"
+    ],
     "win": {
-           "icon": "assets/appx/Square256x256Logo.png",
-         "target": [
-             {
-               "target": "appx",
-               "arch": ["x64"]
-             }
-           ]
-         }
+      "icon": "assets/appx/Square256x256Logo.png",
+      "target": [
+        {
+          "target": "appx",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    }
   },
   "homepage": "https://podbbang-helper.piano8283.com/"
 }

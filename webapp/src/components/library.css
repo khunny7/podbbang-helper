@@ -1,0 +1,33 @@
+.library-page {
+  width: 100%;
+}
+
+.library-section {
+  margin: var(--space-3xl) 0;
+}
+
+.library-section-heading {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.library-section-heading > span {
+  color: var(--text-tertiary);
+  font-size: var(--font-size-sm);
+}
+
+.library-empty {
+  padding: var(--space-xl);
+  color: var(--text-tertiary);
+  background: var(--surface-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.continue-progress {
+  margin: 0 0 var(--space-sm);
+  color: var(--text-tertiary);
+  font-size: var(--font-size-sm);
+}

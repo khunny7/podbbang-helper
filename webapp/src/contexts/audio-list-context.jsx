@@ -1,14 +1,16 @@
 import { createContext, useContext, useReducer, useEffect, useState } from "react";
-import { usePersistedState, usePlaybackPosition } from "../hooks/use-persisted-state";
+import { usePersistedState } from "../hooks/use-persisted-state";
 import storageService, { STORAGE_KEYS } from "../services/storage";
 
 // Action types for audio reducer
 const AUDIO_ACTIONS = {
   SET_PLAYLIST: 'SET_PLAYLIST',
   ADD_TO_PLAYLIST: 'ADD_TO_PLAYLIST',
+  PLAY_EPISODE: 'PLAY_EPISODE',
   REMOVE_FROM_PLAYLIST: 'REMOVE_FROM_PLAYLIST',
   CLEAR_PLAYLIST: 'CLEAR_PLAYLIST',
   SET_CURRENT_EPISODE: 'SET_CURRENT_EPISODE',
+  PLAY_NEXT: 'PLAY_NEXT',
   SET_PLAYING: 'SET_PLAYING',
   SET_POSITION: 'SET_POSITION',
   SET_DURATION: 'SET_DURATION',
@@ -64,13 +66,38 @@ const audioReducer = (state, action) => {
       };
 
     case AUDIO_ACTIONS.ADD_TO_PLAYLIST:
+      if (state.playlist.some(episode => String(episode.id) === String(action.payload.id))) {
+        return state;
+      }
       const newPlaylist = [...state.playlist, action.payload];
       return {
         ...state,
         playlist: newPlaylist,
         currentEpisode: state.currentEpisode || action.payload,
-        currentIndex: state.currentIndex === -1 ? 0 : state.currentIndex
+        currentIndex: state.currentEpisode
+          ? newPlaylist.findIndex(episode => String(episode.id) === String(state.currentEpisode.id))
+          : 0
       };
+
+    case AUDIO_ACTIONS.PLAY_EPISODE: {
+      const isCurrentEpisode = String(state.currentEpisode?.id) === String(action.payload.id);
+      const existingIndex = state.playlist.findIndex(
+        episode => String(episode.id) === String(action.payload.id)
+      );
+      const playlist = existingIndex >= 0
+        ? state.playlist.map((episode, index) => index === existingIndex ? action.payload : episode)
+        : [...state.playlist, action.payload];
+      const currentIndex = existingIndex >= 0 ? existingIndex : playlist.length - 1;
+      return {
+        ...state,
+        playlist,
+        currentEpisode: playlist[currentIndex],
+        currentIndex,
+        isPlaying: true,
+        position: isCurrentEpisode ? state.position : 0,
+        duration: isCurrentEpisode ? state.duration : 0
+      };
+    }
 
     case AUDIO_ACTIONS.REMOVE_FROM_PLAYLIST:
       const filteredPlaylist = state.playlist.filter((_, index) => index !== action.index);
@@ -83,7 +110,10 @@ const audioReducer = (state, action) => {
         ...state,
         playlist: filteredPlaylist,
         currentIndex: filteredPlaylist.length === 0 ? -1 : newIndex,
-        currentEpisode: filteredPlaylist[newIndex] || null
+        currentEpisode: filteredPlaylist[newIndex] || null,
+        isPlaying: filteredPlaylist.length > 0 && state.isPlaying,
+        position: action.index === state.currentIndex ? 0 : state.position,
+        duration: action.index === state.currentIndex ? 0 : state.duration
       };
 
     case AUDIO_ACTIONS.CLEAR_PLAYLIST:
@@ -97,12 +127,29 @@ const audioReducer = (state, action) => {
       };
 
     case AUDIO_ACTIONS.SET_CURRENT_EPISODE:
-      const episodeIndex = state.playlist.findIndex(ep => ep.id === action.payload?.id);
+      const episodeIndex = state.playlist.findIndex(
+        ep => String(ep.id) === String(action.payload?.id)
+      );
+      const currentEpisodeChanged = String(state.currentEpisode?.id) !== String(action.payload?.id);
       return {
         ...state,
         currentEpisode: action.payload,
-        currentIndex: episodeIndex !== -1 ? episodeIndex : state.currentIndex,
-        position: 0 // Reset position when changing episodes
+        currentIndex: episodeIndex,
+        position: currentEpisodeChanged ? 0 : state.position,
+        duration: currentEpisodeChanged ? 0 : state.duration
+      };
+
+    case AUDIO_ACTIONS.PLAY_NEXT:
+      if (state.currentIndex >= state.playlist.length - 1) {
+        return { ...state, isPlaying: false };
+      }
+      return {
+        ...state,
+        currentIndex: Math.max(0, state.currentIndex + 1),
+        currentEpisode: state.playlist[Math.max(0, state.currentIndex + 1)],
+        isPlaying: true,
+        position: 0,
+        duration: 0
       };
 
     case AUDIO_ACTIONS.SET_PLAYING:
@@ -152,6 +199,7 @@ const AudioListsContext = createContext({
   removeFromPlaylist: () => {},
   clearPlaylist: () => {},
   setCurrentEpisode: () => {},
+  playEpisode: () => {},
   setPlaying: () => {},
   setPosition: () => {},
   setDuration: () => {},
@@ -170,7 +218,6 @@ const AudioListsContext = createContext({
 // Provider component
 export const AudioListsProvider = ({ children }) => {
   const [state, dispatch] = useReducer(audioReducer, getInitialState());
-  const { setPosition: setPersistedPosition } = usePlaybackPosition(state.currentEpisode?.id);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Load persisted state on mount
@@ -271,13 +318,6 @@ export const AudioListsProvider = ({ children }) => {
     storageService.set(STORAGE_KEYS.PLAYBACK_SPEED, state.playbackSpeed);
   }, [state.playbackSpeed, isInitialized]);
 
-  // Persist playback position
-  useEffect(() => {
-    if (state.currentEpisode?.id && state.position > 0) {
-      setPersistedPosition(state.position);
-    }
-  }, [state.position, state.currentEpisode?.id, setPersistedPosition]);
-
   // Action creators
   const setPlaylist = (episodes, currentIndex = 0) => {
     dispatch({ 
@@ -305,6 +345,10 @@ export const AudioListsProvider = ({ children }) => {
     dispatch({ type: AUDIO_ACTIONS.SET_CURRENT_EPISODE, payload: episode });
   };
 
+  const playEpisode = (episode) => {
+    dispatch({ type: AUDIO_ACTIONS.PLAY_EPISODE, payload: episode });
+  };
+
   const setPlaying = (playing) => {
     dispatch({ type: AUDIO_ACTIONS.SET_PLAYING, payload: playing });
   };
@@ -326,10 +370,7 @@ export const AudioListsProvider = ({ children }) => {
   };
 
   const playNext = () => {
-    if (state.currentIndex < state.playlist.length - 1) {
-      const nextEpisode = state.playlist[state.currentIndex + 1];
-      setCurrentEpisode(nextEpisode);
-    }
+    dispatch({ type: AUDIO_ACTIONS.PLAY_NEXT });
   };
 
   const playPrevious = () => {
@@ -349,6 +390,7 @@ export const AudioListsProvider = ({ children }) => {
     removeFromPlaylist,
     clearPlaylist,
     setCurrentEpisode,
+    playEpisode,
     setPlaying,
     setPosition,
     setDuration,

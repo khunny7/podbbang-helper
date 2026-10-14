@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Podcast headphones</title>
+  <rect width="128" height="128" rx="22" fill="#252836"/>
+  <path d="M27 66V58a37 37 0 0 1 74 0v8" fill="none" stroke="#a5b4fc" stroke-linecap="round" stroke-width="8"/>
+  <rect x="20" y="61" width="21" height="37" rx="10" fill="#818cf8"/>
+  <rect x="87" y="61" width="21" height="37" rx="10" fill="#818cf8"/>
+  <path d="M98 97c-5 10-15 15-28 15h-8" fill="none" stroke="#a5b4fc" stroke-linecap="round" stroke-width="5"/>
+  <circle cx="55" cy="112" r="4" fill="#a5b4fc"/>
+</svg>
