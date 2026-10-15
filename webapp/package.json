@@ -17,6 +17,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "test:request-retry": "node --test src/data/fetch-with-retry.test.mjs",
     "lint": "eslint src --ext .js,.jsx"
   },
   "eslintConfig": {

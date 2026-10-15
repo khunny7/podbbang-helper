@@ -1,3 +1,5 @@
+import { fetchWithRetry } from './fetch-with-retry.mjs';
+
 const defaultBaseUrl = 'https://vercel-proxy-five-sage.vercel.app/api';
 const baseUrl = (
   import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? '/api' : defaultBaseUrl)
@@ -20,7 +22,7 @@ const getJson = async (path, signal) => {
   signal?.addEventListener('abort', cancelRequest, { once: true });
 
   try {
-    response = await fetch(`${baseUrl}${path}`, {
+    response = await fetchWithRetry(`${baseUrl}${path}`, {
       method: 'GET',
       headers: {
         Accept: 'application/json',

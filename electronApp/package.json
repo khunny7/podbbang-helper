@@ -1,6 +1,6 @@
 {
   "name": "PodbbangUnofficial",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "private": true,
   "dependencies": {
     "electron-is-dev": "^2.0.0"

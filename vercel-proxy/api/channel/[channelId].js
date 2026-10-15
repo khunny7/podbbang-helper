@@ -1,8 +1,11 @@
+import { fetchWithRetry } from '../../lib/fetch-with-retry.mjs';
+
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, refcode, accept-language');
+  res.setHeader('Access-Control-Expose-Headers', 'Retry-After');
 
   if (req.method === 'OPTIONS') {
     res.status(200).end();
@@ -35,7 +38,7 @@ export default async function handler(req, res) {
     console.log(`Channel proxy: ${targetUrl}`);
 
     // Make the upstream request
-    const upstreamResponse = await fetch(targetUrl, {
+    const upstreamResponse = await fetchWithRetry(targetUrl, {
       method: 'GET',
       headers: {
         'accept': 'application/json, text/plain, */*',
@@ -47,18 +50,34 @@ export default async function handler(req, res) {
     });
 
     if (!upstreamResponse.ok) {
-      throw new Error(`Upstream error: ${upstreamResponse.status}`);
+      const upstreamStatus = upstreamResponse.status;
+      const status = upstreamStatus >= 500 ? 502 : upstreamStatus;
+      const retryAfter = upstreamResponse.headers.get('retry-after');
+      if (retryAfter) res.setHeader('Retry-After', retryAfter);
+      return res.status(status).json({
+        error: 'Podbbang upstream error',
+        message: `Upstream error: ${upstreamStatus}`,
+        upstreamStatus,
+      });
     }
 
-    const data = await upstreamResponse.json();
+    let data;
+    try {
+      data = await upstreamResponse.json();
+    } catch {
+      return res.status(502).json({
+        error: 'Podbbang returned an unreadable response.',
+        message: 'Please retry the request.',
+      });
+    }
     
     res.status(200).json(data);
     
   } catch (error) {
     console.error('Channel proxy error:', error);
-    res.status(500).json({ 
-      error: 'Channel proxy error', 
-      message: error.message 
+    res.status(error.name === 'AbortError' ? 504 : 502).json({
+      error: 'Channel proxy error',
+      message: 'Could not reach Podbbang. Please retry the request.',
     });
   }
 }

@@ -4,7 +4,8 @@
   "description": "Vercel serverless proxy for Podbbang API",
   "scripts": {
     "start": "vercel dev",
-    "deploy": "vercel --prod"
+    "deploy": "vercel --prod",
+    "test:request-retry": "node --test tests/fetch-with-retry.test.mjs"
   },
   "engines": {
     "node": ">=18.0.0"
